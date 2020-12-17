@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1608183221757.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2253223855",
+    "id" : "FBABE19A",
+    "lastKnownWriteTime" : 1608073616,
+    "last_content_update" : 1608073616,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/SSD/cal_parallel.R",
+    "project_path" : "cal_parallel.R",
+    "properties" : {
+        "cursorPosition" : "30,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

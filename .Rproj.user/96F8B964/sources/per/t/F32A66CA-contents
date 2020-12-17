@@ -1,0 +1,586 @@
+rm(list = ls())
+source("../../pilotfuns.R")
+
+#load("~/Desktop/Proposal/pilot_new/pilot/normal2_n0p15_auc_n0120.Rdata")
+#auc120=LR.auc
+
+
+
+# load("./auc/t_normal_bs_n0p15_auc_n015_test1.Rdata")
+# auc15_tft.LR = LR.auc
+# auc15_tft.RF = RF.auc
+# auc15_tft.svm = svm.auc
+# auc15_tft.xgb = xgb.auc
+# 
+# load("./auc/t_normal_bs_n0p15_auc_n030_test1.Rdata")
+# auc30_tft.LR = LR.auc
+# auc30_tft.RF = RF.auc
+# auc30_tft.svm = svm.auc
+# auc30_tft.xgb = xgb.auc
+# 
+# load("./auc/t_normal_bs_n0p15_auc_n060_test1.Rdata")
+# auc60_tft.LR = LR.auc
+# auc60_tft.RF = RF.auc
+# auc60_tft.svm = svm.auc
+# auc60_tft.xgb = xgb.auc
+# 
+# load("./auc/t_normal_bs_n0p15_auc_n0120_test1.Rdata")
+# auc120_tft.LR = LR.auc
+# auc120_tft.RF = RF.auc
+# auc120_tft.svm = svm.auc
+# auc120_tft.xgb = xgb.auc
+# 
+# load("./auc/t_normal_bs_n0p15_auc_n0150_test1.Rdata")
+# auc150_tft.LR = LR.auc
+# auc150_tft.RF = RF.auc
+# auc150_tft.svm = svm.auc
+# auc150_tft.xgb = xgb.auc
+
+
+
+
+load("./auc/t_normal_bs_n0p15_auc_n015_test0.Rdata")
+auc15_tfs.LR = LR.auc
+auc15_tfs.RF = RF.auc
+auc15_tfs.svm = svm.auc
+auc15_tfs.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n030_test0.Rdata")
+auc30_tfs.LR = LR.auc
+auc30_tfs.RF = RF.auc
+auc30_tfs.svm = svm.auc
+auc30_tfs.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n060_test0.Rdata")
+auc60_tfs.LR = LR.auc
+auc60_tfs.RF = RF.auc
+auc60_tfs.svm = svm.auc
+auc60_tfs.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n0120_test0.Rdata")
+auc120_tfs.LR = LR.auc
+auc120_tfs.RF = RF.auc
+auc120_tfs.svm = svm.auc
+auc120_tfs.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n0150_test0.Rdata")
+auc150_tfs.LR = LR.auc
+auc150_tfs.RF = RF.auc
+auc150_tfs.svm = svm.auc
+auc150_tfs.xgb = xgb.auc
+
+
+
+
+load("./auc/t_normal_bs_n0p15_auc_n015_test2.Rdata")
+auc15_trainft.LR = LR.auc
+auc15_trainft.RF = RF.auc
+auc15_trainft.svm = svm.auc
+auc15_trainft.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n030_test2.Rdata")
+auc30_trainft.LR = LR.auc
+auc30_trainft.RF = RF.auc
+auc30_trainft.svm = svm.auc
+auc30_trainft.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n060_test2.Rdata")
+auc60_trainft.LR = LR.auc
+auc60_trainft.RF = RF.auc
+auc60_trainft.svm = svm.auc
+auc60_trainft.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n0120_test2.Rdata")
+auc120_trainft.LR = LR.auc
+auc120_trainft.RF = RF.auc
+auc120_trainft.svm = svm.auc
+auc120_trainft.xgb = xgb.auc
+
+load("./auc/t_normal_bs_n0p15_auc_n0150_test2.Rdata")
+auc150_trainft.LR = LR.auc
+auc150_trainft.RF = RF.auc
+auc150_trainft.svm = svm.auc
+auc150_trainft.xgb = xgb.auc
+
+
+
+
+
+group=c(15,30,60,120,150)
+seed=rep(c(1,2,3,4,5,6,7,8),5)
+# seed=rep(c(9,10,11,12,13,14,15,16),5)
+
+
+
+# auc_tft<-data.frame(
+#   AUC_tft.LR=c(c(t(auc15_tft.LR[1:8,])),c(t(auc30_tft.LR[1:8,])),c(t(auc60_tft.LR[1:8,])),c(t(auc120_tft.LR[1:8,])),c(t(auc150_tft.LR[1:8,]))),
+#   AUC_tft.RF=c(c(t(auc15_tft.RF[1:8,])),c(t(auc30_tft.RF[1:8,])),c(t(auc60_tft.RF[1:8,])),c(t(auc120_tft.RF[1:8,])),c(t(auc150_tft.RF[1:8,]))),
+#   AUC_tft.svm=c(c(t(auc15_tft.svm[1:8,])),c(t(auc30_tft.svm[1:8,])),c(t(auc60_tft.svm[1:8,])),c(t(auc120_tft.svm[1:8,])),c(t(auc150_tft.svm[1:8,]))),
+#   AUC_tft.xgb=c(c(t(auc15_tft.xgb[1:8,])),c(t(auc30_tft.xgb[1:8,])),c(t(auc60_tft.xgb[1:8,])),c(t(auc120_tft.xgb[1:8,])),c(t(auc150_tft.xgb[1:8,]))),
+#   Seed=as.factor(rep(seed,each=100)),
+#   Class=as.factor(rep(group,each=800))
+#   #Class=c(rep("a30",800),rep("b60",800),rep("c90",800),rep("d1200",800))
+# )
+
+
+auc_tfs<-data.frame(
+  AUC_tfs.LR=c(c(t(auc15_tfs.LR[1:8,])),c(t(auc30_tfs.LR[1:8,])),c(t(auc60_tfs.LR[1:8,])),c(t(auc120_tfs.LR[1:8,])),c(t(auc150_tfs.LR[1:8,]))),
+  AUC_tfs.RF=c(c(t(auc15_tfs.RF[1:8,])),c(t(auc30_tfs.RF[1:8,])),c(t(auc60_tfs.RF[1:8,])),c(t(auc120_tfs.RF[1:8,])),c(t(auc150_tfs.RF[1:8,]))),
+  AUC_tfs.svm=c(c(t(auc15_tfs.svm[1:8,])),c(t(auc30_tfs.svm[1:8,])),c(t(auc60_tfs.svm[1:8,])),c(t(auc120_tfs.svm[1:8,])),c(t(auc150_tfs.svm[1:8,]))),
+  AUC_tfs.xgb=c(c(t(auc15_tfs.xgb[1:8,])),c(t(auc30_tfs.xgb[1:8,])),c(t(auc60_tfs.xgb[1:8,])),c(t(auc120_tfs.xgb[1:8,])),c(t(auc150_tfs.xgb[1:8,]))),
+  Seed=as.factor(rep(seed,each=100)),
+  Class=as.factor(rep(group,each=800))
+)
+
+auc_trainft<-data.frame(
+  AUC_trainft.LR=c(c(t(auc15_trainft.LR[1:8,])),c(t(auc30_trainft.LR[1:8,])),c(t(auc60_trainft.LR[1:8,])),c(t(auc120_trainft.LR[1:8,])),c(t(auc150_trainft.LR[1:8,]))),
+  AUC_trainft.RF=c(c(t(auc15_trainft.RF[1:8,])),c(t(auc30_trainft.RF[1:8,])),c(t(auc60_trainft.RF[1:8,])),c(t(auc120_trainft.RF[1:8,])),c(t(auc150_trainft.RF[1:8,]))),
+  AUC_trainft.svm=c(c(t(auc15_trainft.svm[1:8,])),c(t(auc30_trainft.svm[1:8,])),c(t(auc60_trainft.svm[1:8,])),c(t(auc120_trainft.svm[1:8,])),c(t(auc150_trainft.svm[1:8,]))),
+  AUC_trainft.xgb=c(c(t(auc15_trainft.xgb[1:8,])),c(t(auc30_trainft.xgb[1:8,])),c(t(auc60_trainft.xgb[1:8,])),c(t(auc120_trainft.xgb[1:8,])),c(t(auc150_trainft.xgb[1:8,]))),
+  Seed=as.factor(rep(seed,each=100)),
+  Class=as.factor(rep(group,each=800))
+)
+
+
+
+
+### part 1: draw plot
+
+library(ggplot2)
+
+pd <- position_dodge(0.5) # move them .5 to the left and right
+cbPalette<-c("#D55E00","#009E73","#56B4E9","#CC79A7")
+
+# auc_tft.LR.sum<-summarySE(auc_tft,measurevar = "AUC_tft.LR",groupvars = c("Seed","Class"))
+# fig_tft.auc.LR=ggplot(auc_tft.LR.sum, aes(x=Seed, y=AUC_tft.LR, color=Class,group=Class)) + 
+#   geom_errorbar(aes(ymin=AUC_tft.LR-sd, ymax=AUC_tft.LR+sd),width=0.2,position = pd)+
+#   geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+#   geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+#   theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.4,0.9)
+# 
+# fig_tft.auc.LR
+
+auc_tfs.LR.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.LR",groupvars = c("Seed","Class"))
+fig_tfs.auc.LR=ggplot(auc_tfs.LR.sum, aes(x=Seed, y=AUC_tfs.LR, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_tfs.LR-sd, ymax=AUC_tfs.LR+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_tfs.auc.LR
+
+auc_trainft.LR.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.LR",groupvars = c("Seed","Class"))
+fig_trainft.auc.LR=ggplot(auc_trainft.LR.sum, aes(x=Seed, y=AUC_trainft.LR, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_trainft.LR-sd, ymax=AUC_trainft.LR+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_trainft.auc.LR
+
+
+
+
+# auc_tft.RF.sum<-summarySE(auc_tft,measurevar = "AUC_tft.RF",groupvars = c("Seed","Class"))
+# fig_tft.auc.RF=ggplot(auc_tft.RF.sum, aes(x=Seed, y=AUC_tft.RF, color=Class,group=Class)) + 
+#   geom_errorbar(aes(ymin=AUC_tft.RF-sd, ymax=AUC_tft.RF+sd),width=0.2,position = pd)+
+#   geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+#   geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+#   theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.45,0.85)
+# 
+# fig_tft.auc.RF
+
+
+auc_tfs.RF.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.RF",groupvars = c("Seed","Class"))
+fig_tfs.auc.RF=ggplot(auc_tfs.RF.sum, aes(x=Seed, y=AUC_tfs.RF, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_tfs.RF-sd, ymax=AUC_tfs.RF+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_tfs.auc.RF
+
+
+auc_trainft.RF.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.RF",groupvars = c("Seed","Class"))
+fig_trainft.auc.RF=ggplot(auc_trainft.RF.sum, aes(x=Seed, y=AUC_trainft.RF, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_trainft.RF-sd, ymax=AUC_trainft.RF+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_trainft.auc.RF
+
+
+
+
+
+# auc_tft.svm.sum<-summarySE(auc_tft,measurevar = "AUC_tft.svm",groupvars = c("Seed","Class"))
+# fig_tft.auc.svm=ggplot(auc_tft.svm.sum, aes(x=Seed, y=AUC_tft.svm, color=Class,group=Class)) + 
+#   geom_errorbar(aes(ymin=AUC_tft.svm-sd, ymax=AUC_tft.svm+sd),width=0.2,position = pd)+
+#   geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+#   geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+#   theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.3,0.9)
+# 
+# fig_tft.auc.svm
+
+auc_tfs.svm.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.svm",groupvars = c("Seed","Class"))
+fig_tfs.auc.svm=ggplot(auc_tfs.svm.sum, aes(x=Seed, y=AUC_tfs.svm, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_tfs.svm-sd, ymax=AUC_tfs.svm+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_tfs.auc.svm
+
+auc_trainft.svm.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.svm",groupvars = c("Seed","Class"))
+fig_trainft.auc.svm=ggplot(auc_trainft.svm.sum, aes(x=Seed, y=AUC_trainft.svm, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_trainft.svm-sd, ymax=AUC_trainft.svm+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_trainft.auc.svm
+
+
+
+
+
+# auc_tft.xgb.sum<-summarySE(auc_tft,measurevar = "AUC_tft.xgb",groupvars = c("Seed","Class"))
+# fig_tft.auc.xgb=ggplot(auc_tft.xgb.sum, aes(x=Seed, y=AUC_tft.xgb, color=Class,group=Class)) + 
+#   geom_errorbar(aes(ymin=AUC_tft.xgb-sd, ymax=AUC_tft.xgb+sd),width=0.2,position = pd)+
+#   geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+#   geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+#   theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.4,0.85)
+# 
+# fig_tft.auc.xgb
+
+auc_tfs.xgb.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.xgb",groupvars = c("Seed","Class"))
+fig_tfs.auc.xgb=ggplot(auc_tfs.xgb.sum, aes(x=Seed, y=AUC_tfs.xgb, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_tfs.xgb-sd, ymax=AUC_tfs.xgb+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_tfs.auc.xgb
+
+auc_trainft.xgb.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.xgb",groupvars = c("Seed","Class"))
+fig_trainft.auc.xgb=ggplot(auc_trainft.xgb.sum, aes(x=Seed, y=AUC_trainft.xgb, color=Class,group=Class)) + 
+  geom_errorbar(aes(ymin=AUC_trainft.xgb-sd, ymax=AUC_trainft.xgb+sd),width=0.2,position = pd)+
+  geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
+  geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(0.7,1.0)
+
+fig_trainft.auc.xgb
+
+
+library(ggpubr)
+fig.LR=ggarrange(fig_tfs.auc.LR,fig_trainft.auc.LR,
+                 nrow=1,ncol=2,common.legend = TRUE, legend="bottom")
+
+setwd("./result")
+pdf(file="LR_plot.pdf",width=8,height=6)
+plot(fig.LR)
+dev.off()
+
+
+fig.RF=ggarrange(fig_tfs.auc.RF,fig_trainft.auc.RF,
+                 nrow=1,ncol=2,common.legend = TRUE, legend="bottom")
+# fig.RF
+pin = c(10,3)
+pdf(file="RF_plot.pdf",width=8,height=6)
+plot(fig.RF)
+dev.off()
+
+fig.svm=ggarrange(fig_tfs.auc.svm,fig_trainft.auc.svm,
+                  nrow=1,ncol=2,common.legend = TRUE, legend="bottom")
+# fig.svm
+pdf(file="svm_plot.pdf",width=8,height=6)
+plot(fig.svm)
+dev.off()
+
+fig.xgb=ggarrange(fig_tfs.auc.xgb,fig_trainft.auc.xgb,
+                  nrow=1,ncol=2,common.legend = TRUE, legend="bottom")
+# fig.xgb
+pdf(file="xgb_plot.pdf",width=8,height=6)
+plot(fig.xgb)
+dev.off()
+
+
+### part 1: calculate the median 
+options(scipen = 200)
+group=c(15,30,60,120,150)
+seed=rep(c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),5)
+
+# auc_tft<-data.frame(
+#   AUC_tft.LR=c(c(t(auc15_tft.LR[1:20,])),c(t(auc30_tft.LR[1:20,])),c(t(auc60_tft.LR[1:20,])),c(t(auc120_tft.LR[1:20,])),c(t(auc150_tft.LR[1:20,]))),
+#   AUC_tft.RF=c(c(t(auc15_tft.RF[1:20,])),c(t(auc30_tft.RF[1:20,])),c(t(auc60_tft.RF[1:20,])),c(t(auc120_tft.RF[1:20,])),c(t(auc150_tft.RF[1:20,]))),
+#   AUC_tft.svm=c(c(t(auc15_tft.svm[1:20,])),c(t(auc30_tft.svm[1:20,])),c(t(auc60_tft.svm[1:20,])),c(t(auc120_tft.svm[1:20,])),c(t(auc150_tft.svm[1:20,]))),
+#   AUC_tft.xgb=c(c(t(auc15_tft.xgb[1:20,])),c(t(auc30_tft.xgb[1:20,])),c(t(auc60_tft.xgb[1:20,])),c(t(auc120_tft.xgb[1:20,])),c(t(auc150_tft.xgb[1:20,]))),
+#   Seed=as.factor(rep(seed,each=100)),
+#   Class=as.factor(rep(group,each=2000))
+#   #Class=c(rep("a30",800),rep("b60",800),rep("c90",800),rep("d1200",800))
+# )
+
+auc_tfs<-data.frame(
+  AUC_tfs.LR=c(c(t(auc15_tfs.LR[1:20,])),c(t(auc30_tfs.LR[1:20,])),c(t(auc60_tfs.LR[1:20,])),c(t(auc120_tfs.LR[1:20,])),c(t(auc150_tfs.LR[1:20,]))),
+  AUC_tfs.RF=c(c(t(auc15_tfs.RF[1:20,])),c(t(auc30_tfs.RF[1:20,])),c(t(auc60_tfs.RF[1:20,])),c(t(auc120_tfs.RF[1:20,])),c(t(auc150_tfs.RF[1:20,]))),
+  AUC_tfs.svm=c(c(t(auc15_tfs.svm[1:20,])),c(t(auc30_tfs.svm[1:20,])),c(t(auc60_tfs.svm[1:20,])),c(t(auc120_tfs.svm[1:20,])),c(t(auc150_tfs.svm[1:20,]))),
+  AUC_tfs.xgb=c(c(t(auc15_tfs.xgb[1:20,])),c(t(auc30_tfs.xgb[1:20,])),c(t(auc60_tfs.xgb[1:20,])),c(t(auc120_tfs.xgb[1:20,])),c(t(auc150_tfs.xgb[1:20,]))),
+  Seed=as.factor(rep(seed,each=100)),
+  Class=as.factor(rep(group,each=2000))
+  #Class=c(rep("a30",800),rep("b60",800),rep("c90",800),rep("d1200",800))
+)
+
+auc_trainft<-data.frame(
+  AUC_trainft.LR=c(c(t(auc15_trainft.LR[1:20,])),c(t(auc30_trainft.LR[1:20,])),c(t(auc60_trainft.LR[1:20,])),c(t(auc120_trainft.LR[1:20,])),c(t(auc150_trainft.LR[1:20,]))),
+  AUC_trainft.RF=c(c(t(auc15_trainft.RF[1:20,])),c(t(auc30_trainft.RF[1:20,])),c(t(auc60_trainft.RF[1:20,])),c(t(auc120_trainft.RF[1:20,])),c(t(auc150_trainft.RF[1:20,]))),
+  AUC_trainft.svm=c(c(t(auc15_trainft.svm[1:20,])),c(t(auc30_trainft.svm[1:20,])),c(t(auc60_trainft.svm[1:20,])),c(t(auc120_trainft.svm[1:20,])),c(t(auc150_trainft.svm[1:20,]))),
+  AUC_trainft.xgb=c(c(t(auc15_trainft.xgb[1:20,])),c(t(auc30_trainft.xgb[1:20,])),c(t(auc60_trainft.xgb[1:20,])),c(t(auc120_trainft.xgb[1:20,])),c(t(auc150_trainft.xgb[1:20,]))),
+  Seed=as.factor(rep(seed,each=100)),
+  Class=as.factor(rep(group,each=2000))
+  #Class=c(rep("a30",800),rep("b60",800),rep("c90",800),rep("d1200",800))
+)
+
+# auc_tft.LR.sum<-summarySE(auc_tft,measurevar = "AUC_tft.LR",groupvars = c("Seed","Class"))
+auc_tfs.LR.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.LR",groupvars = c("Seed","Class"))
+auc_trainft.LR.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.LR",groupvars = c("Seed","Class"))
+
+# auc_tft.RF.sum<-summarySE(auc_tft,measurevar = "AUC_tft.RF",groupvars = c("Seed","Class"))
+auc_tfs.RF.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.RF",groupvars = c("Seed","Class"))
+auc_trainft.RF.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.RF",groupvars = c("Seed","Class"))
+
+# auc_tft.svm.sum<-summarySE(auc_tft,measurevar = "AUC_tft.svm",groupvars = c("Seed","Class"))
+auc_tfs.svm.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.svm",groupvars = c("Seed","Class"))
+auc_trainft.svm.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.svm",groupvars = c("Seed","Class"))
+
+# auc_tft.xgb.sum<-summarySE(auc_tft,measurevar = "AUC_tft.xgb",groupvars = c("Seed","Class"))
+auc_tfs.xgb.sum<-summarySE(auc_tfs,measurevar = "AUC_tfs.xgb",groupvars = c("Seed","Class"))
+auc_trainft.xgb.sum<-summarySE(auc_trainft,measurevar = "AUC_trainft.xgb",groupvars = c("Seed","Class"))
+
+auc_median.LR <- auc_median.RF <- auc_median.svm <- auc_median.xgb <- data.frame(Seed=group, sdDvByMean_median_tfe=rep(0,length(group)), ratio_tfe=rep(0,length(group)), sdDvByMean_median_trainft=rep(0,length(group)), ratio_trainft=rep(0,length(group)))
+
+i=1
+for(n0_train in group){
+  auc_median.LR[i,2] = median(auc_tfs.LR.sum[auc_tfs.LR.sum[,2]==n0_train,][,5]/auc_tfs.LR.sum[auc_tfs.LR.sum[,2]==n0_train,][,4])
+  # auc_median.LR[i,4] = median(auc_tft.LR.sum[auc_tft.LR.sum[,2]==n0_train,][,5])
+  auc_median.LR[i,4] = median(auc_trainft.LR.sum[auc_trainft.LR.sum[,2]==n0_train,][,5]/auc_trainft.LR.sum[auc_trainft.LR.sum[,2]==n0_train,][,4])
+  
+  auc_median.RF[i,2] = median(auc_tfs.RF.sum[auc_tfs.RF.sum[,2]==n0_train,][,5]/auc_tfs.RF.sum[auc_tfs.RF.sum[,2]==n0_train,][,4])
+  # auc_median.RF[i,4] = median(auc_tft.RF.sum[auc_tft.RF.sum[,2]==n0_train,][,5])
+  auc_median.RF[i,4] = median(auc_trainft.RF.sum[auc_trainft.RF.sum[,2]==n0_train,][,5]/auc_trainft.RF.sum[auc_trainft.RF.sum[,2]==n0_train,][,4])
+  
+  auc_median.svm[i,2] = median(auc_tfs.svm.sum[auc_tfs.svm.sum[,2]==n0_train,][,5]/auc_tfs.svm.sum[auc_tfs.svm.sum[,2]==n0_train,][,4])
+  # auc_median.svm[i,4] = median(auc_tft.svm.sum[auc_tft.svm.sum[,2]==n0_train,][,5])
+  auc_median.svm[i,4] = median(auc_trainft.svm.sum[auc_trainft.svm.sum[,2]==n0_train,][,5]/auc_trainft.svm.sum[auc_trainft.svm.sum[,2]==n0_train,][,4])
+  
+  auc_median.xgb[i,2] = median(auc_tfs.xgb.sum[auc_tfs.xgb.sum[,2]==n0_train,][,5]/auc_tfs.xgb.sum[auc_tfs.xgb.sum[,2]==n0_train,][,4])
+  # auc_median.xgb[i,4] = median(auc_tft.xgb.sum[auc_tft.xgb.sum[,2]==n0_train,][,5])
+  auc_median.xgb[i,4] = median(auc_trainft.xgb.sum[auc_trainft.xgb.sum[,2]==n0_train,][,5]/auc_trainft.xgb.sum[auc_trainft.xgb.sum[,2]==n0_train,][,4])
+  
+  auc_median.LR[i,3] = auc_median.LR[i,2]/auc_median.LR[1,2]
+  auc_median.LR[i,5] = auc_median.LR[i,4]/auc_median.LR[1,4]
+  # auc_median.LR[i,7] = auc_median.LR[i,6]/auc_median.LR[1,6]
+  
+  auc_median.RF[i,3] = auc_median.RF[i,2]/auc_median.RF[1,2]
+  auc_median.RF[i,5] = auc_median.RF[i,4]/auc_median.RF[1,4]
+  # auc_median.RF[i,7] = auc_median.RF[i,6]/auc_median.RF[1,6]
+  
+  auc_median.svm[i,3] = auc_median.svm[i,2]/auc_median.svm[1,2]
+  auc_median.svm[i,5] = auc_median.svm[i,4]/auc_median.svm[1,4]
+  # auc_median.svm[i,7] = auc_median.svm[i,6]/auc_median.svm[1,6]
+  
+  auc_median.xgb[i,3] = auc_median.xgb[i,2]/auc_median.xgb[1,2]
+  auc_median.xgb[i,5] = auc_median.xgb[i,4]/auc_median.xgb[1,4]
+  # auc_median.xgb[i,7] = auc_median.xgb[i,6]/auc_median.xgb[1,6]
+  
+  i=i+1
+}
+
+file = paste0("./result/auc_median.Rdata")
+save(auc_median.LR, auc_median.RF, auc_median.svm, auc_median.xgb, file=file)
+
+
+# x = t(auc_median.LR)[1,]
+# lm_lr_tfe.fit=lm(t(auc_median.LR)[2,]~x)
+# lm_lr_tft.fit=lm(t(auc_median.LR)[4,]~x)
+# lm_lr_trainft.fit=lm(t(auc_median.LR)[6,]~x)
+# 
+# lm_rf_tfe.fit=lm(t(auc_median.RF)[2,]~x)
+# lm_rf_tft.fit=lm(t(auc_median.RF)[4,]~x)
+# lm_rf_trainft.fit=lm(t(auc_median.RF)[6,]~x)
+# 
+# lm_svm_tfe.fit=lm(t(auc_median.svm)[2,]~x)
+# lm_svm_tft.fit=lm(t(auc_median.svm)[4,]~x)
+# lm_svm_trainft.fit=lm(t(auc_median.svm)[6,]~x)
+# 
+# lm_xgb_tfe.fit=lm(t(auc_median.xgb)[2,]~x)
+# lm_xgb_tft.fit=lm(t(auc_median.xgb)[4,]~x)
+# lm_xgb_trainft.fit=lm(t(auc_median.xgb)[6,]~x)
+
+n=c(15,30,60,120,150)
+nn=seq(1,200,1)
+group=c("SD-tfe","SD-True")
+newx = data.frame(n=nn)
+
+########################LR
+
+fit.LR.tfe = lm(1/t(auc_median.LR)[2,]~n)
+# fit.LR.tft = lm(1/t(auc_median.LR)[4,]~n)
+fit.LR.true = lm(1/t(auc_median.LR)[4,]~n)
+
+predy.LR.tfe=1/predict(fit.LR.tfe,newx)
+# predy.LR.tft=1/predict(fit.LR.tft,newx)
+predy.LR.true=1/predict(fit.LR.true,newx)
+
+SD.LR <-data.frame(
+  sd = c(t(auc_median.LR)[2,],t(auc_median.LR)[4,]),
+  size = rep(n,2),
+  Class = rep(group,each=5)
+)
+
+SD.pred <-data.frame(
+  sd = c(predy.LR.tfe,predy.LR.true),
+  nn = rep(nn,2),
+  Class = rep(group,each=length(nn))
+)
+pdf(file="table_LR_plot.pdf",width=10,height=6)
+ggplot(data = SD.LR, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.05)+
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+pdf(file="table_LR_plot_scaled.pdf",width=10,height=6)
+ggplot(data = SD.LR, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ylim(0,0.3)+ scale_x_log10() +
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+########################RF
+
+fit.RF.tfe = lm(1/t(auc_median.RF)[2,]~n)
+# fit.RF.tft = lm(1/t(auc_median.RF)[4,]~n)
+fit.RF.true = lm(1/t(auc_median.RF)[4,]~n)
+
+predy.RF.tfe=1/predict(fit.RF.tfe,newx)
+# predy.RF.tft=1/predict(fit.RF.tft,newx)
+predy.RF.true=1/predict(fit.RF.true,newx)
+
+SD.RF <-data.frame(
+  sd = c(t(auc_median.RF)[2,],t(auc_median.RF)[4,]),
+  size = rep(n,2),
+  Class = rep(group,each=5)
+)
+
+SD.pred <-data.frame(
+  sd = c(predy.RF.tfe,predy.RF.true),
+  nn = rep(nn,2),
+  Class = rep(group,each=length(nn))
+)
+pdf(file="table_RF_plot.pdf",width=10,height=6)
+ggplot(data = SD.RF, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.02)+
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+pdf(file="table_RF_plot_scaled.pdf",width=10,height=6)
+ggplot(data = SD.RF, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ylim(0,0.3)+ scale_x_log10() +
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+########################svm
+
+fit.svm.tfe = lm(1/t(auc_median.svm)[2,]~n)
+# fit.svm.tft = lm(1/t(auc_median.svm)[4,]~n)
+fit.svm.true = lm(1/t(auc_median.svm)[4,]~n)
+
+predy.svm.tfe=1/predict(fit.svm.tfe,newx)
+# predy.svm.tft=1/predict(fit.svm.tft,newx)
+predy.svm.true=1/predict(fit.svm.true,newx)
+
+SD.svm <-data.frame(
+  sd = c(t(auc_median.svm)[2,],t(auc_median.svm)[4,]),
+  size = rep(n,2),
+  Class = rep(group,each=5)
+)
+
+SD.pred <-data.frame(
+  sd = c(predy.svm.tfe,predy.svm.true),
+  nn = rep(nn,2),
+  Class = rep(group,each=length(nn))
+)
+pdf(file="table_svm_plot.pdf",width=10,height=6)
+ggplot(data = SD.svm, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.02)+
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+pdf(file="table_svm_plot_scaled.pdf",width=10,height=6)
+ggplot(data = SD.svm, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.3)+ scale_x_log10() +
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+########################xgb
+
+fit.xgb.tfe = lm(1/t(auc_median.xgb)[2,]~n)
+# fit.xgb.tft = lm(1/t(auc_median.xgb)[4,]~n)
+fit.xgb.true = lm(1/t(auc_median.xgb)[4,]~n)
+
+predy.xgb.tfe=1/predict(fit.xgb.tfe,newx)
+# predy.xgb.tft=1/predict(fit.xgb.tft,newx)
+predy.xgb.true=1/predict(fit.xgb.true,newx)
+
+SD.xgb <-data.frame(
+  sd = c(t(auc_median.xgb)[2,],t(auc_median.xgb)[4,]),
+  size = rep(n,2),
+  Class = rep(group,each=5)
+)
+
+SD.pred <-data.frame(
+  sd = c(predy.xgb.tfe,predy.xgb.true),
+  nn = rep(nn,2),
+  Class = rep(group,each=length(nn))
+)
+pdf(file="table_xgb_plot.pdf",width=10,height=6)
+ggplot(data = SD.xgb, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.04)+
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+pdf(file="table_xgb_plot_scaled.pdf",width=10,height=6)
+ggplot(data = SD.xgb, aes(x = size, y = sd, group=Class,color=Class))+
+  geom_point()+ ylim(0,0.3)+ scale_x_log10() +
+  geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+dev.off()
+
+print(t(auc_median.LR))
+print(coef(fit.LR.tfe)[c(1,2)])
+# print(coef(lm_lr_tft.fit)[c(1,2)])
+print(coef(fit.LR.true)[c(1,2)])
+print(t(auc_median.RF))
+print(coef(fit.RF.tfe)[c(1,2)])
+# print(coef(lm_rf_tft.fit)[c(1,2)])
+print(coef(fit.RF.true)[c(1,2)])
+print(t(auc_median.svm))
+print(coef(fit.svm.tfe)[c(1,2)])
+# print(coef(lm_svm_tft.fit)[c(1,2)])
+print(coef(fit.svm.true)[c(1,2)])
+print(t(auc_median.xgb))
+print(coef(fit.xgb.tfe)[c(1,2)])
+# print(coef(lm_xgb_tft.fit)[c(1,2)])
+print(coef(fit.xgb.true)[c(1,2)])
+
+
+
+# View(t(auc_median.LR))
+# View(t(auc_median.RF))
+# View(t(auc_median.svm))
+# View(t(auc_median.xgb))

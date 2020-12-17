@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1608161845414.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1421361618",
+    "id" : "52D64625",
+    "lastKnownWriteTime" : 1608189282,
+    "last_content_update" : 1608189282836,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/SSD/R/calculate_AUCs.R",
+    "project_path" : "R/calculate_AUCs.R",
+    "properties" : {
+        "cursorPosition" : "70,70",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
