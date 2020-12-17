@@ -1,0 +1,17 @@
+Package: SSD
+Version: 0.0.0
+Date: 2020-12-03
+Title: Sample Size Determination
+Author: Min Zhou, Shudong Sun, Xin tong, Jingyi Li
+Maintainer: Shudong Sun <shudongs@usc.edu>
+Depends: R (>= 3.6.0)
+Imports:
+Suggests:
+Description: Try to help to do the sample size determination using our methods
+License: GPL
+URL: https://github.com/pzhao/rmickey
+BugReports: https://github.com/pzhao/rmickey/issues
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
+NeedsCompilation: no
+Packaged: 2020-12-03 09:53:27 UTC; pz
