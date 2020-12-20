@@ -5,20 +5,23 @@
 \title{Title Main}
 \usage{
 calculate_AUC_base(
-  n01_p = 15,
-  n_train_sets = c(15, 30, 60, 120, 150),
-  n01_test = 300,
+  n01_all = c(800, 800),
+  n01_p = c(15, 15),
+  n_train_sets = c(c(15, 15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)),
+  n01_test = c(300, 300),
   seed = 1,
   method = "pca2_mvnorm",
   model = c("svm", "randomforest")
 )
 }
 \arguments{
-\item{n01_p}{size of pilot data labeled as class 0/1}
+\item{n01_all}{size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.}
 
-\item{n_train_sets}{size sets of training data labeled as class 0/1}
+\item{n01_p}{size of pilot data labeled as class 0/1. For example, n01_p=c(15,15) represents that the size of pilot data labeled as class 0 is 15 and the size of pilot data labeled as class 1 is also 15.}
 
-\item{n01_test}{size of test data labeled as class 0/1}
+\item{n_train_sets}{size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).}
+
+\item{n01_test}{number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.}
 
 \item{seed}{random seed number}
 

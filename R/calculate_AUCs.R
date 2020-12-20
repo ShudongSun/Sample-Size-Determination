@@ -1,8 +1,9 @@
 #' Title Calculate the AUCs
 #'
-#' @param n01_p number of pilot data labeled as class 0/1
-#' @param n_train_sets size sets of training data labeled as class 0/1
-#' @param n01_test number of test data labeled as class 0/1
+#' @param n01_all size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.
+#' @param n01_p size of pilot data labeled as class 0/1. For example, n01_p=c(15,15) represents that the size of pilot data labeled as class 0 is 15 and the size of pilot data labeled as class 1 is also 15.
+#' @param n_train_sets size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).
+#' @param n01_test number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.
 #' @param num_of_seeds number of seeds
 #' @param random_seeds
 #' If TRUE, it will produce "num_of_seeds" seeds randomly.
@@ -35,17 +36,17 @@
 #' @export
 #'
 #' @examples
-#' calculate_AUCs(n01_p=15, n01_test=300, num_of_seeds=20, random_seeds=TRUE)
-#' calculate_AUCs(n01_p=15, n01_test=300, num_of_seeds=20, random_seeds=FALSE)
-#' calculate_AUCs(n01_p=15, n01_test=300, seeds=c(2,4,6,7,9,12,25,34,24,65))
-#' calculate_AUCs(n01_p=15, n01_test=300, num_of_seeds=20, random_seeds=TRUE, calculate_std_of_AUC_and_produce_plot=TRUE)
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE)
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE)
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seeds=c(2,4,6,7,9,12,25,34,24,65))
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, calculate_std_of_AUC_and_produce_plot=TRUE)
 #'
-calculate_AUCs <- function(n01_p=15, n_train_sets = c(15,30,60,120,150), n01_test=300, num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"))
+calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"))
 {
   library(parallel)
 
   fun <- function(x){
-    return(calculate_AUC_base(n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model))
+    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model))
   }
 
   if(is.null(ncores)){

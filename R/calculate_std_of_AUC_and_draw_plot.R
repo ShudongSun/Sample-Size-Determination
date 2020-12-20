@@ -1,7 +1,7 @@
 #' @title Calculate std and draw the plots
 #'
 #' @param res the result produced by cal_parallel
-#' @param n_train_sets size sets of training data labeled as class 0/1
+#' @param n_train_sets size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).
 #' @param model base classification model set which is corresponding to the result in the "res".
 #' \itemize{
 #' \item logistic: Logistic regression. \link{glm} function with family = 'binomial'
@@ -56,8 +56,10 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
     }
   }
 
+  dim(n_train_sets) = c(2,length(n_train_sets)/2)
+  n_train_total = n_train_sets[1,] + n_train_sets[2,]
 
-  group = n_train_sets
+  group = n_train_total
   if(num_of_seeds<8){
     num_of_seeds_show = num_of_seeds
   }else{
@@ -320,7 +322,7 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
   # save(auc_median_LR, auc_median_RF, auc_median_svm, auc_median_xgb, file=file)
 
 
-  n = n_train_sets
+  n = n_train_total
   nn=seq(1,200,1)
   group2=c("SD-tfe","SD-True")
   newx = data.frame(n=nn)

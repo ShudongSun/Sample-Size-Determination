@@ -9,7 +9,7 @@ calculate_std_of_AUC_and_draw_plot(res, n_train_sets, model)
 \arguments{
 \item{res}{the result produced by cal_parallel}
 
-\item{n_train_sets}{size sets of training data labeled as class 0/1}
+\item{n_train_sets}{size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).}
 
 \item{model}{base classification model set which is corresponding to the result in the "res".
 \itemize{

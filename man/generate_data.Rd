@@ -4,10 +4,12 @@
 \alias{generate_data}
 \title{Generate Data}
 \usage{
-generate_data(seed = 1)
+generate_data(seed = 1, n01_all = c(800, 800))
 }
 \arguments{
 \item{seed}{the seed number}
+
+\item{n01_all}{size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.}
 }
 \value{
 the generated data

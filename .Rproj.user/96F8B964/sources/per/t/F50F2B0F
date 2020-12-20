@@ -1,19 +1,19 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1608183221757.000,
+    "created" : 1608436620815.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
-    "id" : "FBABE19A",
-    "lastKnownWriteTime" : 1608424852,
-    "last_content_update" : 1608424852634,
+    "hash" : "1864743225",
+    "id" : "F50F2B0F",
+    "lastKnownWriteTime" : 1608442270,
+    "last_content_update" : 1608442270655,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/cal_parallel.R",
     "project_path" : "cal_parallel.R",
     "properties" : {
-        "cursorPosition" : "38,0",
-        "scrollLine" : "15"
+        "cursorPosition" : "14,0",
+        "scrollLine" : "0"
     },
     "relative_order" : 1,
     "source_on_save" : false,

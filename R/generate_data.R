@@ -1,17 +1,15 @@
 #' @title Generate Data
 #'
 #' @param seed the seed number
+#' @param n01_all size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.
 #'
 #' @return the generated data
 #' @export
 #'
 #' @examples generate_data(seed=1)
-generate_data <- function(seed=1)
+generate_data <- function(seed=1, n01_all=c(800,800))
 {
   library(mvtnorm)
-
-  n1_p <- n0_p <- 15
-  n_p=n0_p+n1_p
 
   df = 10
   rho=0.5
@@ -19,10 +17,8 @@ generate_data <- function(seed=1)
   delta = rep(2,d)
   H<-abs(outer(1:d,1:d,"-"))
   covxx=rho^H
-  n1_all <- n0_all <- 800
-
-  n0_test <- n1_test <- 300
-  n_test = n0_test + n1_test
+  n0_all <- n01_all[1]
+  n1_all <- n01_all[2]
 
   set.seed(seed)
 

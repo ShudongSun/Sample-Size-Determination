@@ -1,8 +1,9 @@
 #' Title Main
 #'
-#' @param n01_p size of pilot data labeled as class 0/1
-#' @param n_train_sets size sets of training data labeled as class 0/1
-#' @param n01_test size of test data labeled as class 0/1
+#' @param n01_all size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.
+#' @param n01_p size of pilot data labeled as class 0/1. For example, n01_p=c(15,15) represents that the size of pilot data labeled as class 0 is 15 and the size of pilot data labeled as class 1 is also 15.
+#' @param n_train_sets size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).
+#' @param n01_test number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.
 #' @param seed random seed number
 #' @param method
 #' Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
@@ -26,31 +27,37 @@
 #' @export
 #'
 #' @examples AUC = calculate_AUC_base(n01_p=15, n01_test=300, seed=1)
-calculate_AUC_base <- function(n01_p=15, n_train_sets = c(15,30,60,120,150), n01_test=300, seed=1, method="pca2_mvnorm", model=c("svm","randomforest"))
+calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"))
 {
   library(PRROC)
-  n1_p <- n0_p <- n01_p
+  n0_p <- n01_p[1]
+  n1_p <- n01_p[2]
   n_p=n0_p+n1_p
 
-  n0_test <- n1_test <- n01_test
+  n0_test <- n01_test[1]
+  n1_test <- n01_test[2]
   n_test = n0_test + n1_test
 
-  data = generate_data(seed=seed)
+  data = generate_data(seed=seed, n01_all=n01_all)
   pilot_rest_data = split_data(data$x_data, data$y_data, n_train=n_p, seed=seed)
 
   test_y=c(rep(0,n0_test),rep(1,n1_test))
 
-  n_train_sets = n_train_sets
   Loop=100
 
   num_of_model = length(model)
 
-  auc = array(0,dim=c(length(n_train_sets)*2,Loop,num_of_model))
+  number_of_train_sets = length(n_train_sets)/2
+
+  dim(n_train_sets) = c(2,number_of_train_sets)
+
+  auc = array(0,dim=c(length(n_train_sets),Loop,num_of_model))
   # matrix(rep(0,length(n_train_sets)*Loop*2),length(n_train_sets)*2)
   count = 1
   for (test_from_true in c(0,1)){
-    for (n01_train in n_train_sets){
-      n1_train <- n0_train <- n01_train
+    for (i in 1:number_of_train_sets){
+      n0_train <- n_train_sets[1,i]
+      n1_train <- n_train_sets[2,i]
       n_train = n0_train + n1_train
 
       p <- array(0,dim=c(Loop,n_test,num_of_model))
