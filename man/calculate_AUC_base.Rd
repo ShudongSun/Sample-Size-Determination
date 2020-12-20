@@ -11,7 +11,9 @@ calculate_AUC_base(
   n01_test = c(300, 300),
   seed = 1,
   method = "pca2_mvnorm",
-  model = c("svm", "randomforest")
+  model = c("svm", "randomforest"),
+  data_generation = list(dist = "t-distribution", sigma = list(class_0 = diag(5),
+    class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5)))
 )
 }
 \arguments{
@@ -41,6 +43,12 @@ The default value is "pca2_mvnorm".}
 \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
 \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+}}
+
+\item{data_generation}{a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
+\itemize{
+\item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
+\item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
 }}
 }
 \value{

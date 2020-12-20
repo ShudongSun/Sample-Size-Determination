@@ -31,7 +31,11 @@
 #' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 #' }
-#'
+#' @param data_generation a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
+#' \itemize{
+#' \item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
+#' \item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
+#' }
 #' @return Return the AUCs you want to calculate
 #' @export
 #'
@@ -41,12 +45,15 @@
 #' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seeds=c(2,4,6,7,9,12,25,34,24,65))
 #' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, calculate_std_of_AUC_and_produce_plot=TRUE)
 #'
-calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"))
+calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"), data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
 {
   library(parallel)
 
+  # print(data_generation)
+  data_generation = data_generation
+
   fun <- function(x){
-    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model))
+    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model, data_generation=data_generation ))
   }
 
   if(is.null(ncores)){

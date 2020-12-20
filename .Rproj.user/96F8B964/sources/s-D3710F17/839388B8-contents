@@ -22,12 +22,17 @@
 #' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 #' }
+#' @param data_generation a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
+#' \itemize{
+#' \item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
+#' \item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
+#' }
 #'
 #' @return AUC of ...
 #' @export
 #'
 #' @examples AUC = calculate_AUC_base(n01_p=15, n01_test=300, seed=1)
-calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"))
+calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"),data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
 {
   library(PRROC)
   n0_p <- n01_p[1]
@@ -38,7 +43,7 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
   n1_test <- n01_test[2]
   n_test = n0_test + n1_test
 
-  data = generate_data(seed=seed, n01_all=n01_all)
+  data = generate_data(seed=seed, n01_all=n01_all, data_generation=data_generation)
   pilot_rest_data = split_data(data$x_data, data$y_data, n_train=n_p, seed=seed)
 
   test_y=c(rep(0,n0_test),rep(1,n1_test))

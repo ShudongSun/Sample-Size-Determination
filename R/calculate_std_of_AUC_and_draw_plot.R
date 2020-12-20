@@ -323,7 +323,7 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
 
 
   n = n_train_total
-  nn=seq(1,200,1)
+  nn=seq(1,max(n_train_sets)*2+50,1)
   group2=c("SD-tfe","SD-True")
   newx = data.frame(n=nn)
 

@@ -15,7 +15,9 @@ calculate_AUCs(
   calculate_std_of_AUC_and_produce_plot = FALSE,
   method = "pca2_mvnorm",
   ncores = NULL,
-  model = c("svm", "randomforest")
+  model = c("svm", "randomforest"),
+  data_generation = list(dist = "t-distribution", sigma = list(class_0 = diag(5),
+    class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5)))
 )
 }
 \arguments{
@@ -56,6 +58,12 @@ The default value is "pca2_mvnorm".}
 \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 }}
+
+\item{data_generation}{a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
+\itemize{
+\item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
+\item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
+}}
 }
 \value{
 Return the AUCs you want to calculate
@@ -66,7 +74,7 @@ Title Calculate the AUCs
 \examples{
 calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
     15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
-    random_seeds = TRUE)
+    num_of_seeds = 20, random_seeds = TRUE)
 calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
     15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
     num_of_seeds = 20, random_seeds = FALSE)

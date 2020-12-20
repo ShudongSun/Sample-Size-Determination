@@ -4,12 +4,23 @@
 \alias{generate_data}
 \title{Generate Data}
 \usage{
-generate_data(seed = 1, n01_all = c(800, 800))
+generate_data(
+  seed = 1,
+  n01_all = c(800, 800),
+  data_generation = list(dist = "t-distribution", sigma = list(class_0 = diag(5),
+    class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5)))
+)
 }
 \arguments{
 \item{seed}{the seed number}
 
 \item{n01_all}{size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.}
+
+\item{data_generation}{a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
+\itemize{
+\item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
+\item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5)))
+}}
 }
 \value{
 the generated data
@@ -18,5 +29,14 @@ the generated data
 Generate Data
 }
 \examples{
-generate_data(seed = 1)
+df = 10
+rho = 0.5
+d = 5
+delta = rep(2, d)
+H <- abs(outer(1:d, 1:d, "-"))
+covxx = rho^H
+data = generate_data(seed = 1, n01_all = c(800, 800), 
+    data_generation = list(dist = "t-distribution", sigma = list(class_0 = covxx, 
+        class_1 = covxx), df = c(10, 10), delta = c(rep(0, 
+        5), rep(2, 5))))
 }
