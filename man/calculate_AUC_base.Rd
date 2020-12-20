@@ -9,7 +9,8 @@ calculate_AUC_base(
   n_train_sets = c(15, 30, 60, 120, 150),
   n01_test = 300,
   seed = 1,
-  method = "pca2_mvnorm"
+  method = "pca2_mvnorm",
+  model = c("svm", "randomforest")
 )
 }
 \arguments{
@@ -23,6 +24,21 @@ calculate_AUC_base(
 
 \item{method}{Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
 The default value is "pca2_mvnorm".}
+
+\item{model}{base classification model.
+\itemize{
+\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
+\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
+\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
+\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
+\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
+\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
+\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
+\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
+\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
+\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
+\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+}}
 }
 \value{
 AUC of ...
@@ -31,5 +47,5 @@ AUC of ...
 Title Main
 }
 \examples{
-AUC = calculate_AUC(n01_p = 15, n01_test = 300, seed = 1)
+AUC = calculate_AUC_base(n01_p = 15, n01_test = 300, seed = 1)
 }

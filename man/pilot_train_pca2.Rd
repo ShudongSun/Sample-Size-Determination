@@ -4,7 +4,7 @@
 \alias{pilot_train_pca2}
 \title{Training after PCA_2}
 \usage{
-pilot_train_pca2(x_train, y_train, x_test)
+pilot_train_pca2(x_train, y_train, x_test, method = c("svm", "randomforest"))
 }
 \arguments{
 \item{x_train}{input variables of training data}
@@ -12,15 +12,27 @@ pilot_train_pca2(x_train, y_train, x_test)
 \item{y_train}{labels of training data}
 
 \item{x_test}{input variables of test data}
+
+\item{method}{base classification method.
+\itemize{
+\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
+\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
+\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
+\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
+\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
+\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
+\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
+\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
+\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
+\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
+\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+}}
 }
 \value{
 the scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
 }
 \description{
-Use PCA and select the first two PCs to reduce the dimension, then train 4 different models using the first PCs.
-}
-\details{
-Use Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost as training model.
+Use PCA and select the first two PCs to reduce the dimension, then train different models using the first PCs.
 }
 \examples{
 
@@ -61,5 +73,5 @@ id1_test <- sample(id1_remain, n1_test)
 id_test <- c(id0_test, id1_test)
 x_test <- as.matrix(x_data[id_test, ])
 
-result = pilot_train_pca2(x_train, y_train, x_test)
+result = pilot_train_pca2(x_train, y_train, x_test, method = c("svm", "randomforest"))
 }

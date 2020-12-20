@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2253223855",
+    "hash" : "0",
     "id" : "FBABE19A",
-    "lastKnownWriteTime" : 1608073616,
-    "last_content_update" : 1608073616,
-    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/SSD/cal_parallel.R",
+    "lastKnownWriteTime" : 1608424852,
+    "last_content_update" : 1608424852634,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/cal_parallel.R",
     "project_path" : "cal_parallel.R",
     "properties" : {
-        "cursorPosition" : "30,0",
-        "scrollLine" : "0"
+        "cursorPosition" : "38,0",
+        "scrollLine" : "15"
     },
     "relative_order" : 1,
     "source_on_save" : false,

@@ -10,7 +10,8 @@ pilot_tfe_gaussian_copula(
   n0_train,
   n1_train,
   n0_test,
-  n1_test
+  n1_test,
+  method = c("svm", "randomforest")
 )
 }
 \arguments{
@@ -25,15 +26,27 @@ pilot_tfe_gaussian_copula(
 \item{n0_test}{the number of test data of class 0}
 
 \item{n1_test}{the number of test data of class 1}
+
+\item{method}{base classification method.
+\itemize{
+\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
+\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
+\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
+\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
+\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
+\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
+\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
+\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
+\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
+\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
+\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+}}
 }
 \value{
 he scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
 }
 \description{
-Use Gaussian Copula as the generative model and train 4 different models.
-}
-\details{
-Use Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost as training model.
+Use Gaussian Copula as the generative model and train different models.
 }
 \examples{
 library(mvtnorm)
@@ -69,7 +82,7 @@ n1_train <- n0_train <- n_train <- 60
 n0_test <- n1_test <- 300
 
 result = pilot_tfe_gaussian_copula(x_pilot, y_pilot, n0_train, n1_train, n0_test, 
-    n1_test)
+    n1_test, method = c("svm", "randomforest"))
 
 
 

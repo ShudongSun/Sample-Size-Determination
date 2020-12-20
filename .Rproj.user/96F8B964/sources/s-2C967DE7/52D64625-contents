@@ -16,6 +16,20 @@
 #' The default value is "pca2_mvnorm".
 #' @param ncores
 #' number of cores used for parallel computing. Default = detectCores() - 1.
+#' @param model base classification model.
+#' \itemize{
+#' \item logistic: Logistic regression. \link{glm} function with family = 'binomial'
+#' \item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
+#' \item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
+#' \item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
+#' \item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
+#' \item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
+#' \item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
+#' \item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
+#' \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
+#' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
+#' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+#' }
 #'
 #' @return Return the AUCs you want to calculate
 #' @export
@@ -26,12 +40,12 @@
 #' calculate_AUCs(n01_p=15, n01_test=300, seeds=c(2,4,6,7,9,12,25,34,24,65))
 #' calculate_AUCs(n01_p=15, n01_test=300, num_of_seeds=20, random_seeds=TRUE, calculate_std_of_AUC_and_produce_plot=TRUE)
 #'
-calculate_AUCs <- function(n01_p=15, n_train_sets = c(15,30,60,120,150), n01_test=300, num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL)
+calculate_AUCs <- function(n01_p=15, n_train_sets = c(15,30,60,120,150), n01_test=300, num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"))
 {
   library(parallel)
 
   fun <- function(x){
-    return(calculate_AUC_base(n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method))
+    return(calculate_AUC_base(n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model))
   }
 
   if(is.null(ncores)){
@@ -68,7 +82,7 @@ calculate_AUCs <- function(n01_p=15, n_train_sets = c(15,30,60,120,150), n01_tes
   # load("./auc_res.Rdata")
 
   if(calculate_std_of_AUC_and_produce_plot==TRUE){
-    calculate_std_of_AUC_and_draw_plot(res,n_train_sets = n_train_sets)
+    calculate_std_of_AUC_and_draw_plot(res,n_train_sets=n_train_sets, model=model)
   }
 
   return(res)

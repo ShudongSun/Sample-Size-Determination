@@ -5,17 +5,17 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3272082736",
+    "hash" : "0",
     "id" : "5ECBFD83",
-    "lastKnownWriteTime" : 1608189226,
-    "last_content_update" : 1608189226060,
-    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/SSD/R/calculate_AUC_base.R",
+    "lastKnownWriteTime" : 1608418830,
+    "last_content_update" : 1608418830712,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_AUC_base.R",
     "project_path" : "R/calculate_AUC_base.R",
     "properties" : {
-        "cursorPosition" : "14,75",
+        "cursorPosition" : "27,13",
         "scrollLine" : "0"
     },
-    "relative_order" : 3,
+    "relative_order" : 5,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

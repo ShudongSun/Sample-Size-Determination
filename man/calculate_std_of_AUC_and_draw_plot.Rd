@@ -4,10 +4,27 @@
 \alias{calculate_std_of_AUC_and_draw_plot}
 \title{Calculate std and draw the plots}
 \usage{
-calculate_std_of_AUC_and_draw_plot(res, n_train_sets = c(15, 30, 60, 120, 150))
+calculate_std_of_AUC_and_draw_plot(res, n_train_sets, model)
 }
 \arguments{
 \item{res}{the result produced by cal_parallel}
+
+\item{n_train_sets}{size sets of training data labeled as class 0/1}
+
+\item{model}{base classification model set which is corresponding to the result in the "res".
+\itemize{
+\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
+\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
+\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
+\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
+\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
+\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
+\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
+\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
+\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
+\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
+\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+}}
 }
 \value{
 It will save all the result to the "result" directory.
