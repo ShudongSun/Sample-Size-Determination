@@ -7,12 +7,12 @@
     "folds" : "",
     "hash" : "0",
     "id" : "F6DFB87F",
-    "lastKnownWriteTime" : 1608359626,
-    "last_content_update" : 1608359626,
+    "lastKnownWriteTime" : 1608509095,
+    "last_content_update" : 1608509095471,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_tfe_mvnorm_pca2.R",
     "project_path" : "R/pilot_tfe_mvnorm_pca2.R",
     "properties" : {
-        "cursorPosition" : "8,0",
+        "cursorPosition" : "121,2",
         "scrollLine" : "0"
     },
     "relative_order" : 6,

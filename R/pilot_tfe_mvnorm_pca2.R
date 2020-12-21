@@ -107,19 +107,19 @@ pilot_tfe_mvnorm_pca2 <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_t
   n_test=n0_test+n1_test
 
 
-  ###### y
+  ### y
   train_y=c(rep(0,n0_train),rep(1,n1_train))
   y0index=which(train_y==0)
   y1index=which(train_y==1)
 
 
-  ###### train
+  ### train
   train_x0=t(mvrnorm(n0_train, mu0_hat, sigma_hat))
   train_x1=t(mvrnorm(n1_train, mu1_hat, sigma_hat))
   trx=matrix(t(cbind(train_x0,train_x1)),n_train,2)
   train_x=as.data.frame(trx)
 
-  ###### test
+  ### test
   test_x0=t(mvrnorm(n0_test, mu0_hat, sigma_hat))
   test_x1=t(mvrnorm(n1_test, mu1_hat, sigma_hat))
   tex=matrix(t(cbind(test_x0,test_x1)),n_test,2)

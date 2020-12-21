@@ -99,21 +99,21 @@ pilot_tfe_gaussian_copula <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,
   mymvd0 <- mvdc(copula=mycop,margins=rep("norm",num_feature),paramMargins=para0_list)
   mymvd1 <- mvdc(copula=mycop,margins=rep("norm",num_feature),paramMargins=para1_list)
 
-  ######################generate the samples based on the estimated distributions
+  ###generate the samples based on the estimated distributions
   n_train=n0_train+n1_train
   n_test=n0_test+n1_test
 
 
-  ###########################y
+  ###y
   train_y=c(rep(0,n0_train),rep(1,n1_train))
 
-  ######################train
+  ###train
   train_x0=rMvdc(n0_train, mymvd0)
   train_x1=rMvdc(n1_train, mymvd1)
   trx=matrix(rbind(train_x0,train_x1),n_train,num_feature)
   train_x=as.data.frame(trx)
 
-  #########################test
+  ###test
   test_x0=rMvdc(n0_test, mymvd0)
   test_x1=rMvdc(n1_test, mymvd1)
   tex=matrix(rbind(test_x0,test_x1),n_test,num_feature)

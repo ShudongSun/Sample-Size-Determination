@@ -73,16 +73,8 @@ Title Calculate the AUCs
 }
 \examples{
 calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
-    15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
-    num_of_seeds = 20, random_seeds = TRUE)
-calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
-    15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
-    num_of_seeds = 20, random_seeds = FALSE)
-calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
-    15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
-    seeds = c(2, 4, 6, 7, 9, 12, 25, 34, 24, 65))
-calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 
-    15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), n01_test = c(300, 300), 
-    num_of_seeds = 20, random_seeds = TRUE, calculate_std_of_AUC_and_produce_plot = TRUE)
+    15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), 
+    n01_test = c(300, 300), num_of_seeds = 20, random_seeds = FALSE, 
+    calculate_std_of_AUC_and_produce_plot = TRUE)
 
 }

@@ -57,7 +57,6 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
   dim(n_train_sets) = c(2,number_of_train_sets)
 
   auc = array(0,dim=c(length(n_train_sets),Loop,num_of_model))
-  # matrix(rep(0,length(n_train_sets)*Loop*2),length(n_train_sets)*2)
   count = 1
   for (test_from_true in c(0,1)){
     for (i in 1:number_of_train_sets){
@@ -85,12 +84,6 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
           p[L,,j] = result[j,]
         }
 
-#         p.RF[L,] = result$p.RF
-#
-#         p.svm[L,] = result$p.svm
-#
-#         p.xgb[L,] = result$p.xgb
-
         cat(count,L,"\n")
 
       }
@@ -106,25 +99,7 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
           roc <- roc.curve(scores.class0 =score[index1_test],scores.class1=score[index0_test],curve =FALSE)
 
           auc[count,k,j]=roc$auc
-          # auc = array(0,dim=c(length(n_train_sets)*2,Loop,num_of_model))
         }
-
-
-
-        # score.RF=p.RF[k,]
-        # roc.RF<-roc.curve(scores.class0 =score.RF[index1_test],scores.class1=score.RF[index0_test],curve =FALSE)
-        #
-        # RF.auc[count,k]=roc.RF$auc
-        #
-        # score.svm=p.svm[k,]
-        # roc.svm<-roc.curve(scores.class0 =score.svm[index1_test],scores.class1=score.svm[index0_test],curve =FALSE)
-        #
-        # svm.auc[count,k]=roc.svm$auc
-        #
-        # score.xgb=p.xgb[k,]
-        # roc.xgb<-roc.curve(scores.class0 =score.xgb[index1_test],scores.class1=score.xgb[index0_test],curve =FALSE)
-        #
-        # xgb.auc[count,k]=roc.xgb$auc
 
       }
       count = count + 1

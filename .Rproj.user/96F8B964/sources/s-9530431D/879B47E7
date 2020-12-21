@@ -7,12 +7,12 @@
     "folds" : "",
     "hash" : "0",
     "id" : "879B47E7",
-    "lastKnownWriteTime" : 1608504356,
-    "last_content_update" : 1608504356440,
+    "lastKnownWriteTime" : 1608509193,
+    "last_content_update" : 1608509193575,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_std_of_AUC_and_draw_plot.R",
     "project_path" : "R/calculate_std_of_AUC_and_draw_plot.R",
     "properties" : {
-        "cursorPosition" : "325,33",
+        "cursorPosition" : "194,0",
         "scrollLine" : "0"
     },
     "relative_order" : 7,
