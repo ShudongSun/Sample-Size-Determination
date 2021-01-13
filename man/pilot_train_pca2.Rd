@@ -29,7 +29,7 @@ pilot_train_pca2(x_train, y_train, x_test, method = c("svm", "randomforest"))
 }}
 }
 \value{
-the scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
+the scores predicted by models
 }
 \description{
 Use PCA and select the first two PCs to reduce the dimension, then train different models using the first PCs.

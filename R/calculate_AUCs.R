@@ -1,17 +1,18 @@
-#' Title Calculate the AUCs
+#' @title Calculate the AUCs
+#' @description The main function of SSD package: build the model and calculate the AUCs with parallel, you can also get the resulting plot via this function.
 #'
 #' @param n01_all size of all data labeled as class 0/1. For example, n01_all=c(800,800) represents that the size of all data labeled as class 0 is 800 and the size of all data labeled as class 1 is also 800.
 #' @param n01_p size of pilot data labeled as class 0/1. For example, n01_p=c(15,15) represents that the size of pilot data labeled as class 0 is 15 and the size of pilot data labeled as class 1 is also 15.
 #' @param n_train_sets size sets of training data labeled as class 0/1. For example, n_train_sets=c(c(30,30),c(90,90),c(150,150)) represents that we try 3 different sets of training data and the training size of the first set is c(30,30).
 #' @param n01_test number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.
-#' @param num_of_seeds number of seeds
+#' @param num_of_seeds number of seeds you want to use to run simulations.(If you want to make the plots, "num_of_seeds" must be not smaller than 2)
 #' @param random_seeds
 #' If TRUE, it will produce "num_of_seeds" seeds randomly.
 #' If FASLE, it will use seeds "1:num_of_seeds", which is used to make it reproducible.
 #' @param seeds
 #' You can choose the seeds set as you wish. It's default value is NULL.
 #' If it's not NULL, the function will use your seeds and ignore parameters "num_of_seeds" and "random_seeds".
-#' @param calculate_std_of_AUC_and_produce_plot You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE.
+#' @param calculate_std_of_AUC_and_produce_plot You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE. It will create a new folder named "result" in your current directory and save the plots into it.
 #' @param method
 #' Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
 #' The default value is "pca2_mvnorm".

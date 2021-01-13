@@ -3,7 +3,6 @@
 export(calculate_AUC_base)
 export(calculate_AUCs)
 export(calculate_std_of_AUC_and_draw_plot)
-export(foo)
 export(generate_data)
 export(pilot_tfe_gaussian_copula)
 export(pilot_tfe_mvnorm_pca2)

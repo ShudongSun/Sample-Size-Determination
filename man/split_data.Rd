@@ -24,7 +24,7 @@ If NULL, the value is automatically set to the complement of the training size.}
 Pass an int as the seed for reproducible output across multiple function calls.}
 }
 \value{
-The split data
+the split data
 }
 \description{
 Split Data

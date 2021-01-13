@@ -21,7 +21,7 @@
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 #' }
 #'
-#' @return he scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
+#' @return the scores predicted by models
 #' @export
 #'
 #' @examples

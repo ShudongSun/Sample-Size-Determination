@@ -15,7 +15,7 @@
 #' Controls the shuffling applied to the data before applying the split.
 #' Pass an int as the seed for reproducible output across multiple function calls.
 #'
-#' @return The split data
+#' @return the split data
 #' @export
 #'
 #' @examples

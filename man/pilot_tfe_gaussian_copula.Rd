@@ -43,7 +43,7 @@ pilot_tfe_gaussian_copula(
 }}
 }
 \value{
-he scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
+the scores predicted by models
 }
 \description{
 Use Gaussian Copula as the generative model and train different models.

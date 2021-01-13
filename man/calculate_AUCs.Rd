@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_AUCs.R
 \name{calculate_AUCs}
 \alias{calculate_AUCs}
-\title{Title Calculate the AUCs}
+\title{Calculate the AUCs}
 \usage{
 calculate_AUCs(
   n01_all = c(800, 800),
@@ -29,7 +29,7 @@ calculate_AUCs(
 
 \item{n01_test}{number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.}
 
-\item{num_of_seeds}{number of seeds}
+\item{num_of_seeds}{number of seeds you want to use to run simulations.(If you want to make the plots, "num_of_seeds" must be not smaller than 2)}
 
 \item{random_seeds}{If TRUE, it will produce "num_of_seeds" seeds randomly.
 If FASLE, it will use seeds "1:num_of_seeds", which is used to make it reproducible.}
@@ -37,7 +37,7 @@ If FASLE, it will use seeds "1:num_of_seeds", which is used to make it reproduci
 \item{seeds}{You can choose the seeds set as you wish. It's default value is NULL.
 If it's not NULL, the function will use your seeds and ignore parameters "num_of_seeds" and "random_seeds".}
 
-\item{calculate_std_of_AUC_and_produce_plot}{You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE.}
+\item{calculate_std_of_AUC_and_produce_plot}{You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE. It will create a new folder named "result" in your current directory and save the plots into it.}
 
 \item{method}{Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
 The default value is "pca2_mvnorm".}
@@ -69,7 +69,7 @@ The default value is "pca2_mvnorm".}
 Return the AUCs you want to calculate
 }
 \description{
-Title Calculate the AUCs
+The main function of SSD package: build the model and calculate the AUCs with parallel, you can also get the resulting plot via this function.
 }
 \examples{
 calculate_AUCs(n01_all = c(800, 800), n01_p = c(15, 15), n_train_sets = c(c(15, 

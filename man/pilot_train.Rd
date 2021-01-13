@@ -29,7 +29,7 @@ pilot_train(x_train, y_train, x_test, method = c("svm", "randomforest"))
 }}
 }
 \value{
-the scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
+the scores predicted by models
 }
 \description{
 use different methods to train the data.

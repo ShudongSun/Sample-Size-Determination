@@ -43,7 +43,7 @@ pilot_tfe_mvnorm_pca2(
 }}
 }
 \value{
-the scores predicted by Logistic Regresion, Random Forrest, Support Vector Machine and Xgboost seperately
+the scores predicted by models
 }
 \description{
 Use PCA and select the first two PCs to reduce the dimension, then use multivariate normal distribution as the generative model and train different models.
