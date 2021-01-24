@@ -4,7 +4,13 @@
 \alias{pilot_train_pca2}
 \title{Training after PCA_2}
 \usage{
-pilot_train_pca2(x_train, y_train, x_test, method = c("svm", "randomforest"))
+pilot_train_pca2(
+  x_train,
+  y_train,
+  x_test,
+  method = c("svm", "randomforest"),
+  func = NULL
+)
 }
 \arguments{
 \item{x_train}{input variables of training data}
@@ -26,7 +32,19 @@ pilot_train_pca2(x_train, y_train, x_test, method = c("svm", "randomforest"))
 \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
 \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+\item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
 }}
+
+\item{func}{If you set "method" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
+\code{library(e1071)\cr\cr
+predict_model <- function(x_train, y_train, x_test){ \cr
+data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
+fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
+pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
+p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
+return(p_svm) \cr
+}\cr \cr
+result = pilot_train_pca2(x_train,y_train,x_test,method=c("self","randomforest"),func=predict_model)}}
 }
 \value{
 the scores predicted by models

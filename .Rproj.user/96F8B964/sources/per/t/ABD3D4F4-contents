@@ -22,7 +22,20 @@
 #' \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
 #' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+#' \item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
 #' }
+#'
+#' @param func If you set "model" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
+#' \code{library(e1071)\cr\cr
+#' predict_model <- function(x_train, y_train, x_test){ \cr
+#' data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
+#' fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
+#' pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
+#' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
+#' return(p_svm) \cr
+#' }\cr \cr
+#' AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}
+#'
 #' @param data_generation a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
 #' \itemize{
 #' \item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
@@ -33,7 +46,7 @@
 #' @export
 #'
 #' @examples AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("svm","randomforest"))
-calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"),data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
+calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"),func=NULL,data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
 {
   library(PRROC)
   n0_p <- n01_p[1]
@@ -70,15 +83,15 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
       for (L in 1:Loop)
       {
         if(test_from_true==0){
-          if(method == "pca2_mvnorm"){result = pilot_tfe_mvnorm_pca2(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model)}
-          if(method == "gaussian_copula"){result = pilot_tfe_gaussian_copula(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model)}
+          if(method == "pca2_mvnorm"){result = pilot_tfe_mvnorm_pca2(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
+          if(method == "gaussian_copula"){result = pilot_tfe_gaussian_copula(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
 
         }else if(test_from_true==1){
 
           train_test_data = split_data(data$x_data, data$y_data, n_train=n_train, n_test=n_test)
 
-          if(method == "pca2_mvnorm"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model)}
-          if(method == "gaussian_copula"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model)}
+          if(method == "pca2_mvnorm"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
+          if(method == "gaussian_copula"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
         }
 
         for(j in 1:num_of_model){

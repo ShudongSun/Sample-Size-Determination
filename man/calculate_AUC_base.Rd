@@ -12,6 +12,7 @@ calculate_AUC_base(
   seed = 1,
   method = "pca2_mvnorm",
   model = c("svm", "randomforest"),
+  func = NULL,
   data_generation = list(dist = "t-distribution", sigma = list(class_0 = diag(5),
     class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5)))
 )
@@ -41,7 +42,19 @@ The default value is "pca2_mvnorm".}
 \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
 \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+\item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
 }}
+
+\item{func}{If you set "model" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
+\code{library(e1071)\cr\cr
+predict_model <- function(x_train, y_train, x_test){ \cr
+data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
+fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
+pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
+p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
+return(p_svm) \cr
+}\cr \cr
+AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}}
 
 \item{data_generation}{a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
 \itemize{

@@ -31,7 +31,22 @@
 #' \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
 #' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
+#' \item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
 #' }
+#'
+#' @param func If you set "model" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
+#' \code{\cr
+#' predict_model <- function(x_train, y_train, x_test){ \cr
+#' data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
+#' fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
+#' pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
+#' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
+#' return(p_svm) \cr
+#' }\cr \cr
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, model=c("self","randomforest"), func=predict_model, package_imported=c("e1071"), calculate_std_of_AUC_and_produce_plot=TRUE)}
+#'
+#' @param package_imported If you set "model" to "self",state the names of the packages you used in your "func", which have to be specified when using parallel computing.
+#'
 #' @param data_generation a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
 #' \itemize{
 #' \item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
@@ -43,7 +58,7 @@
 #' @examples
 #' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE)
 #'
-calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"), data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
+calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"),func=NULL ,package_imported=NULL , data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
 {
   library(parallel)
 
@@ -51,7 +66,7 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
   data_generation = data_generation
 
   fun <- function(x){
-    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model, data_generation=data_generation ))
+    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model,func=func, data_generation=data_generation ))
   }
 
   if(is.null(ncores)){
@@ -63,9 +78,15 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
 
   cl <- makeCluster(getOption("cl.cores", clnum));
 
-  clusterEvalQ(cl, c(library(SSD)))
-  clusterExport(cl, c("calculate_AUC_base"),
-                envir=environment())
+
+  clusterExport(cl, "package_imported", envir=environment())
+  for (i in 1:length(package_imported)){
+    clusterExport(cl, "i", envir=environment())
+    clusterEvalQ(cl, library(package_imported[i],character.only = TRUE))
+  }
+  clusterEvalQ(cl, library(SSD))
+  clusterExport(cl, c("calculate_AUC_base","func"),envir=environment())
+
 
   if(is.null(seeds)){
     if(random_seeds==TRUE){

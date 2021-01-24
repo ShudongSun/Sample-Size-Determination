@@ -39,6 +39,8 @@ AUC_1 = calculate_AUC_base(n01_p = c(15, 15), n01_test = c(300, 300), seed = 1,
 AUC_2 = calculate_AUC_base(n01_p = c(15, 15), n01_test = c(300, 300), seed = 1, 
     model = c("svm", "randomforest"), n_train_sets = c(c(15, 15), c(30, 30), c(60, 
         60), c(120, 120), c(150, 150)))
+res = {
+}
 res[[1]] = AUC_1
 res[[2]] = AUC_2
 calculate_std_of_AUC_and_draw_plot(res, n_train_sets = c(c(15, 15), c(30, 30), c(60, 

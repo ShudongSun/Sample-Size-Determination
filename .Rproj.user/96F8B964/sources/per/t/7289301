@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1611426657707.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2817299335",
+    "id" : "7289301",
+    "lastKnownWriteTime" : 1611455834,
+    "last_content_update" : 1611455834545,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_tfe_mvnorm_pca2.R",
+    "project_path" : "R/pilot_tfe_mvnorm_pca2.R",
+    "properties" : {
+        "cursorPosition" : "33,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

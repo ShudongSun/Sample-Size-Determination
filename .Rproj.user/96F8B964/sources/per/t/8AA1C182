@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1611455582525.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "979087566",
+    "id" : "8AA1C182",
+    "lastKnownWriteTime" : 1611464185,
+    "last_content_update" : 1611464185438,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_train_pca2.R",
+    "project_path" : "R/pilot_train_pca2.R",
+    "properties" : {
+        "cursorPosition" : "29,103",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
