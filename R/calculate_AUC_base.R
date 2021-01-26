@@ -34,7 +34,7 @@
 #' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
 #' return(p_svm) \cr
 #' }\cr \cr
-#' AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}
+#' AUC = calculate_AUC_base(n01_all= c(800,800), n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}
 #'
 #' @param data_generation a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
 #' \itemize{
@@ -42,11 +42,30 @@
 #' \item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
 #' }
 #'
+#' @param data_input Its default value is NULL and the function will use the "data_generation" parameter to generate the data. If "data_input" is not NULL, the function will ignore the "data_generation" parameter and "n01_all" parameter, and use the "data_input" as the data.
+#' Your "data_input" should be a list with "x_data" matrix and "y_data" matrix. For example, \cr\cr
+#' \code{
+#'
+#'yeast_data <- read.table("./yeast.data") \cr}
+#'###\link{https://archive.ics.uci.edu/ml/datasets/Diabetic+Retinopathy+Debrecen+Data+Set}\cr\cr
+#'\code{
+#'x_data = yeast_data[,c(2:5,8:9)]\cr
+#'y_label = yeast_data[,10]\cr
+#'id0 = which(y_label=="CYT" | y_label=="MIT")\cr
+#'y_data = rep(1,length(y_label))\cr
+#'y_data[id0] = 0\cr
+#' \cr
+#'data = list(x_data=x_data, y_data=y_data)\cr\cr
+#'
+#'AUC = calculate_AUC_base(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"), data_input=data)\cr
+#' }
+#'
+#'
 #' @return Return the AUCs you want to calculate
 #' @export
 #'
-#' @examples AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("svm","randomforest"))
-calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"),func=NULL,data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
+#' @examples AUC = calculate_AUC_base(n01_all= c(800,800), n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("svm","randomforest"))
+calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"),func=NULL,data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))), data_input=NULL)
 {
   library(PRROC)
   n0_p <- n01_p[1]
@@ -57,7 +76,18 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
   n1_test <- n01_test[2]
   n_test = n0_test + n1_test
 
-  data = generate_data(seed=seed, n01_all=n01_all, data_generation=data_generation)
+  if(is.null(data_input)){
+    data = generate_data(seed=seed, n01_all=n01_all, data_generation=data_generation)
+  }else{
+    data = data_input
+    if(n01_p[1]+n_train_sets[length(n_train_sets)-1]+n01_test[1] > sum(data$y_data==0)){
+      stop('error: there are not sufficient class 0 input data to run the simulations! Please adjust the parameters.')
+    }
+    if(n01_p[2]+n_train_sets[length(n_train_sets)]+n01_test[2] > sum(data$y_data==1)){
+      stop('error: there are not sufficient class 1 input data to run the simulations! Please adjust the parameters.')
+    }
+  }
+
   pilot_rest_data = split_data(data$x_data, data$y_data, n_train=n_p, seed=seed)
 
   test_y=c(rep(0,n0_test),rep(1,n1_test))

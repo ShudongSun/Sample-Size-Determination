@@ -46,6 +46,10 @@ split_data <- function(x_data, y_data, n_train=0.7, n_test=NULL, seed=NULL)
     set.seed(seed)
   }
 
+  if(n0_train > n0_all || n1_train > n1_all){
+    stop('split data error: generated or input data are not sufficient to split!')
+  }
+
   id0_train <- sample(id0,n0_train)
   id1_train <- sample(id1,n1_train)
   id_train <- c(id0_train,id1_train)

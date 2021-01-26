@@ -14,7 +14,8 @@ calculate_AUC_base(
   model = c("svm", "randomforest"),
   func = NULL,
   data_generation = list(dist = "t-distribution", sigma = list(class_0 = diag(5),
-    class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5)))
+    class_1 = diag(5)), df = c(10, 10), delta = c(rep(0, 5), rep(2, 5))),
+  data_input = NULL
 )
 }
 \arguments{
@@ -54,12 +55,30 @@ pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \c
 p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
 return(p_svm) \cr
 }\cr \cr
-AUC = calculate_AUC_base(n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}}
+AUC = calculate_AUC_base(n01_all= c(800,800), n01_p=c(15,15), n01_test=c(300,300), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), seed=1, model=c("self","randomforest"),func=predict_model)}}
 
 \item{data_generation}{a parameter list that you can tell the function about the distribution and parameters you want to use to generate the data.
 \itemize{
 \item "gaussian" represent multivariate gaussian distribution. see \code{\link[MASS]{mvrnorm}} in \code{MASS} package. For example, data_generation=list(dist="gaussian",sigma=list(class_0=diag(5),class_1=diag(5)),mu=c(rep(0,5),rep(2,5)))
 \item "t-distribution" represent multivariate t distribution. see \code{\link[mvtnorm]{rmvt}} in \code{mvtnorm} package. For example, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))).
+}}
+
+\item{data_input}{Its default value is NULL and the function will use the "data_generation" parameter to generate the data. If "data_input" is not NULL, the function will ignore the "data_generation" parameter and "n01_all" parameter, and use the "data_input" as the data.
+Your "data_input" should be a list with "x_data" matrix and "y_data" matrix. For example, \cr\cr
+\code{
+
+yeast_data <- read.table("./yeast.data") \cr}
+###\link{https://archive.ics.uci.edu/ml/datasets/Diabetic+Retinopathy+Debrecen+Data+Set}\cr\cr
+\code{
+x_data = yeast_data[,c(2:5,8:9)]\cr
+y_label = yeast_data[,10]\cr
+id0 = which(y_label=="CYT" | y_label=="MIT")\cr
+y_data = rep(1,length(y_label))\cr
+y_data[id0] = 0\cr
+\cr
+data = list(x_data=x_data, y_data=y_data)\cr\cr
+
+AUC = calculate_AUC_base(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), seed=1, method="pca2_mvnorm", model=c("svm","randomforest"), data_input=data)\cr
 }}
 
 \item{num_of_seeds}{number of seeds you want to use to run simulations.}
@@ -71,7 +90,7 @@ Return the AUCs you want to calculate
 the base function of calculate_AUCs: build the model and calculate the AUCs
 }
 \examples{
-AUC = calculate_AUC_base(n01_p = c(15, 15), n01_test = c(300, 300), 
-    n_train_sets = c(c(15, 15), c(30, 30), c(60, 60), c(120, 120), c(150, 
-        150)), seed = 1, model = c("svm", "randomforest"))
+AUC = calculate_AUC_base(n01_all = c(800, 800), n01_p = c(15, 15), n01_test = c(300, 
+    300), n_train_sets = c(c(15, 15), c(30, 30), c(60, 60), c(120, 120), c(150, 150)), 
+    seed = 1, model = c("svm", "randomforest"))
 }
