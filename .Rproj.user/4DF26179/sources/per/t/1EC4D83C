@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612570469491.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1EC4D83C",
+    "lastKnownWriteTime" : 2314861393472796985,
+    "last_content_update" : 1612570469491,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "id" : "e74af4054c2d46d48aa110b652b8f65a",
+        "name" : "genData",
+        "title" : "genData"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "object_explorer"
+}

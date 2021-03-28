@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612334839164.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3958596341",
+    "id" : "55B98914",
+    "lastKnownWriteTime" : 1611601745,
+    "last_content_update" : 1611601745,
+    "path" : "C:/Users/ssd45/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/split_data.R",
+    "project_path" : "R/split_data.R",
+    "properties" : {
+        "cursorPosition" : "61,39",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

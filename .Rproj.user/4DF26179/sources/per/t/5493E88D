@@ -5,18 +5,20 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "329631432",
+    "hash" : "1884652544",
     "id" : "5493E88D",
-    "lastKnownWriteTime" : 1608509080,
-    "last_content_update" : 1608509080,
+    "lastKnownWriteTime" : 1611455694,
+    "last_content_update" : 1611455694,
     "path" : "C:/Users/ssd45/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_tfe_gaussian_copula.R",
     "project_path" : "R/pilot_tfe_gaussian_copula.R",
     "properties" : {
+        "cursorPosition" : "78,118",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 2,
+    "relative_order" : 3,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

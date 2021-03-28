@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612569691379.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "324040884",
+    "id" : "53888077",
+    "lastKnownWriteTime" : 1612574181,
+    "last_content_update" : 1612574181255,
+    "path" : "C:/Users/ssd45/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/predict_function_test.R",
+    "project_path" : "R/predict_function_test.R",
+    "properties" : {
+        "cursorPosition" : "29,59",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

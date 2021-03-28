@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612576991525.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2536247759",
+    "id" : "9DD663F9",
+    "lastKnownWriteTime" : 1612577368,
+    "last_content_update" : 1612577368005,
+    "path" : "C:/Users/ssd45/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_train.R",
+    "project_path" : "R/pilot_train.R",
+    "properties" : {
+        "cursorPosition" : "93,10",
+        "scrollLine" : "80"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 13,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

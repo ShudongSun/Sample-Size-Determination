@@ -14,7 +14,7 @@
 #' If it's not NULL, the function will use your seeds and ignore parameters "num_of_seeds" and "random_seeds".
 #' @param calculate_std_of_AUC_and_produce_plot You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE. It will create a new folder named "result" in your current directory and save the plots into it.
 #' @param method
-#' Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
+#' Choose the method you want to use: "pca2_mvnorm" , "gaussian_copula" or "smote"(\code{\link[smotefamily]{SMOTE}}).
 #' The default value is "pca2_mvnorm".
 #' @param ncores
 #' number of cores used for parallel computing. Default = detectCores() - 1.
@@ -133,6 +133,7 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
   save(res,file=file)
 
   # load("./auc_res.Rdata")
+  print("res succeed!")
 
   if(calculate_std_of_AUC_and_produce_plot==TRUE){
     calculate_std_of_AUC_and_draw_plot(res,n_train_sets=n_train_sets, model=model)

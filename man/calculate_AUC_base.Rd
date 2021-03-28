@@ -27,7 +27,7 @@ calculate_AUC_base(
 
 \item{n01_test}{number of test data labeled as class 0/1. size of all data labeled as class 0/1. For example, n01_test=c(300,300) represents that the size of test data labeled as class 0 is 300 and the size of test data labeled as class 1 is also 300.}
 
-\item{method}{Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
+\item{method}{Choose the method you want to use: "pca2_mvnorm" , "gaussian_copula" or "smote"(\code{\link[smotefamily]{SMOTE}}).
 The default value is "pca2_mvnorm".}
 
 \item{model}{base classification model.

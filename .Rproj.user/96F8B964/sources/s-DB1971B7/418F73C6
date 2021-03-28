@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1799539250",
+    "hash" : "0",
     "id" : "418F73C6",
-    "lastKnownWriteTime" : 1611644206,
-    "last_content_update" : 1611644206,
+    "lastKnownWriteTime" : 1612573940,
+    "last_content_update" : 1612573940,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_AUC_base.R",
     "project_path" : "R/calculate_AUC_base.R",
     "properties" : {
         "cursorPosition" : "67,18",
-        "scrollLine" : "55"
+        "scrollLine" : "60"
     },
     "relative_order" : 3,
     "source_on_save" : false,

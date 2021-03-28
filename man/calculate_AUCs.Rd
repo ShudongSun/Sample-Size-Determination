@@ -42,7 +42,7 @@ If it's not NULL, the function will use your seeds and ignore parameters "num_of
 
 \item{calculate_std_of_AUC_and_produce_plot}{You can calculate the standard deviation of AUC and produce the plot directly if you set this parameter to TRUE. It will create a new folder named "result" in your current directory and save the plots into it.}
 
-\item{method}{Choose the method you want to use: "pca2_mvnorm" and "gaussian_copula".
+\item{method}{Choose the method you want to use: "pca2_mvnorm" , "gaussian_copula" or "smote"(\code{\link[smotefamily]{SMOTE}}).
 The default value is "pca2_mvnorm".}
 
 \item{ncores}{number of cores used for parallel computing. Default = detectCores() - 1.}

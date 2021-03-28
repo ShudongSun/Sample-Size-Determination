@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612480531894.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "347874106",
+    "id" : "4F7BD436",
+    "lastKnownWriteTime" : 1612573957,
+    "last_content_update" : 1612573957223,
+    "path" : "C:/Users/ssd45/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_AUCs.R",
+    "project_path" : "R/calculate_AUCs.R",
+    "properties" : {
+        "cursorPosition" : "61,89",
+        "scrollLine" : "45"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
