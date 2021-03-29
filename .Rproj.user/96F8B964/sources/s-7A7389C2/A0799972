@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1616958357726.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A0799972",
+    "lastKnownWriteTime" : 32933066199531570,
+    "last_content_update" : 1616958357726,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "id" : "df104fa79384429c9bc4e36c736c78e4",
+        "name" : "fit.tfe",
+        "title" : "fit.tfe"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "object_explorer"
+}

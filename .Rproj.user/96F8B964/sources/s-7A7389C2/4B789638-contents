@@ -98,21 +98,20 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
     pd <- position_dodge(0.5) # move them .5 to the left and right
     cbPalette<-c("#D55E00","#009E73","#56B4E9","#CC79A7")
 
-    # y_min=1
-    # y_max=0
-    # for (i in 1:num_of_seeds){
-    #   y_min = min(y_min,min(res[[i]]))
-    #   y_max = max(y_max,max(res[[i]]))
-    # }
+    y_min=1
+    y_max=0
+    for (k in 1:num_of_seeds){
+      y_min = min(y_min,min(res[[k]]))
+      y_max = max(y_max,max(res[[k]]))
+    }
 
 
     auc_tfs.sum<-summarySE(auc_tfs_df,measurevar = "AUC_tfs",groupvars = c("Seed","Class"))
     fig_tfs_auc=ggplot(auc_tfs.sum, aes(x=Seed, y=AUC_tfs, color=Class,group=Class)) +
       geom_errorbar(aes(ymin=AUC_tfs-sd, ymax=AUC_tfs+sd),width=0.2,position = pd)+
       geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
-      geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
-      theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
-    # +ylim(y_min,y_max)
+      geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC_tfe")+
+      theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(y_min,y_max)
 
     # fig_tfs_auc
 
@@ -120,8 +119,8 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
     fig_trainft_auc=ggplot(auc_trainft.sum, aes(x=Seed, y=AUC_trainft, color=Class,group=Class)) +
       geom_errorbar(aes(ymin=AUC_trainft-sd, ymax=AUC_trainft+sd),width=0.2,position = pd)+
       geom_line(linetype="dashed", aes(color= Class),size=0.2,position=pd) +
-      geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC")+
-      theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")
+      geom_point(size=1,aes(color = Class), alpha = 1,position=pd)+ labs(x = "Seed",y="",title = "AUC_True")+
+      theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(y_min,y_max)
 
 
     library(ggpubr)
@@ -183,11 +182,54 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
 
   ###LR
 
-  fit.tfe = lm(1/t(auc_median)[2,]~n)
-  fit.true = lm(1/t(auc_median)[4,]~n)
+  # fit.tfe = lm(1/t(auc_median)[2,]~n)
+  # fit.true = lm(1/t(auc_median)[4,]~n)
+  #
+  # predy.tfe=1/predict(fit.tfe,newx)
+  # predy.true=1/predict(fit.true,newx)
+  y_tfe = t(auc_median)[2,]
+  y_true = t(auc_median)[4,]
 
-  predy.tfe=1/predict(fit.tfe,newx)
-  predy.true=1/predict(fit.true,newx)
+  # rss_tfe = 0
+  # b_tfe = 0
+  # rss_true = 0
+  # b_true = 0
+  # for (b in seq(from=0.01, to=4, by=0.01)){
+  #   print(b)
+  #
+  #   fit.tfe = nls(y_tfe ~ a*n^(-b)+c, start = list(a=0.5, c=0))
+  #   if(b==0.01){
+  #     rss_tfe = environment(fit.tfe[["m"]][["getPars"]])[["dev"]]
+  #     b_tfe = b
+  #     }
+  #   else{
+  #     if(environment(fit.tfe[["m"]][["getPars"]])[["dev"]]<rss_tfe){
+  #       rss_tfe = environment(fit.tfe[["m"]][["getPars"]])[["dev"]]
+  #       b_tfe = b
+  #     }
+  #   }
+  #
+  #   fit.true = nls(y_true ~ a*n^(-b)+c, start = list(a=1, c=0))
+  #   if(b==0.01){
+  #     rss_true = environment(fit.true[["m"]][["getPars"]])[["dev"]]
+  #     b_true = b
+  #     }
+  #   else{
+  #     if(environment(fit.true[["m"]][["getPars"]])[["dev"]]<rss_true){
+  #       rss_true = environment(fit.true[["m"]][["getPars"]])[["dev"]]
+  #       b_true = b
+  #     }
+  #   }
+  # }
+
+  # fit.tfe = nls(y_tfe ~ a*n^(-b)+c, start = list(a=1, b=0.1, c=1), control = list(maxiter = 500, minFactor=1/10240000), trace = T)
+  # fit.true = nls(y_true ~ a*n^(-b)+c, start = list(a=1, b=0.1, c=1))
+
+  fit.tfe = nls(y_tfe ~ a*n^(-b), start = list(a=0.5, b=0.1))
+  fit.true = nls(y_true ~ a*n^(-b), start = list(a=0.5, b=0.1))
+
+  predy.tfe=predict(fit.tfe,newx)
+  predy.true=predict(fit.true,newx)
 
   SD <-data.frame(
     sd = c(t(auc_median)[2,],t(auc_median)[4,]),
@@ -200,11 +242,17 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model)
     nn = rep(nn,2),
     Class = rep(group2,each=length(nn))
   )
+
+  auc_min=1
+  auc_max=0
+  auc_min = min(c(t(auc_median)[2,], t(auc_median)[4,]))
+  auc_max = max(c(t(auc_median)[2,], t(auc_median)[4,]))
+
   pdf(file=paste(model[i],"plot2.pdf",sep="_"),width=10,height=6)
   plot(ggplot(data = SD, aes(x = size, y = sd, group=Class,color=Class))+
     geom_point()+
-    geom_line(data = SD.pred, aes(x=nn, y=sd,group=Class,color=Class))+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
-    theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom"))
+    geom_line(data = SD.pred, aes(x=nn, y=sd, group=Class,color=Class), na.rm=TRUE)+ labs(x = "Size of training data",y="Median of (std. of AUC / mean of AUC)",title = "Standard deviation of AUC")+
+    theme_bw()+theme(plot.title = element_text(hjust = 0.5),legend.position="bottom")+ylim(max(auc_min-0.02,0),auc_max+0.05))
   dev.off()
 
   }

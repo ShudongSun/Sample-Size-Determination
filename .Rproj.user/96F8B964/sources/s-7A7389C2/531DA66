@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "531DA66",
-    "lastKnownWriteTime" : 1616887155,
-    "last_content_update" : 1616887155975,
+    "lastKnownWriteTime" : 1616954868,
+    "last_content_update" : 1616954868378,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_AUCs.R",
     "project_path" : "R/calculate_AUCs.R",
     "properties" : {
-        "cursorPosition" : "80,14",
-        "scrollLine" : "73",
+        "cursorPosition" : "45,17",
+        "scrollLine" : "41",
         "tempName" : "Untitled1"
     },
     "relative_order" : 2,

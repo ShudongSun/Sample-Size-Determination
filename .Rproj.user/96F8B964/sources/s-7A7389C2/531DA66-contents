@@ -133,7 +133,7 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
   save(res,file=file)
 
   # load("./auc_res.Rdata")
-  print("res succeed!")
+  print("Successfully produce AUCs!")
 
   if(calculate_std_of_AUC_and_produce_plot==TRUE){
     calculate_std_of_AUC_and_draw_plot(res,n_train_sets=n_train_sets, model=model)
