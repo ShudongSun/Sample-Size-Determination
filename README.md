@@ -19,6 +19,7 @@ You can install `SSD` from GitHub with:
 # install.packages("naivebayes")
 # install.packages("ada")
 # install.packages("tree")
+# install.packages("smotefamily")
 
 # install.packages("devtools")
 devtools::install_github("ShudongSun/Sample-Size-Determination")
