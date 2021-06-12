@@ -4,7 +4,12 @@
 \alias{calculate_std_of_AUC_and_draw_plot}
 \title{Calculate std and draw the plots}
 \usage{
-calculate_std_of_AUC_and_draw_plot(res, n_train_sets, model)
+calculate_std_of_AUC_and_draw_plot(
+  res,
+  n_train_sets,
+  model,
+  true_data_to_compare = 1
+)
 }
 \arguments{
 \item{res}{the result produced by cal_parallel}
@@ -25,6 +30,8 @@ calculate_std_of_AUC_and_draw_plot(res, n_train_sets, model)
 \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
 \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 }}
+
+\item{true_data_to_compare}{0/1 variable, whether to have the true data to compare with generated data (which could make the output matrix double): if input_data==NULL(run the simulations), we will generate the true data automatically and calculate the AUCs; if you give us the input_data, please make sure that you give us sufficient input data.}
 }
 \value{
 It will save all the result to the new "result" folder created in your current directory.
@@ -34,15 +41,16 @@ Calculate std and draw the plots
 }
 \examples{
 AUC_1 = calculate_AUC_base(n01_p = c(15, 15), n01_test = c(300, 300), seed = 1, 
-    model = c("svm", "randomforest"), n_train_sets = c(c(15, 15), c(30, 30), c(60, 
-        60), c(120, 120), c(150, 150)))
+    model = c("svm", "randomforest"), n_train_sets = c(c(15, 15), c(30, 30), 
+        c(60, 60), c(120, 120), c(150, 150)))
 AUC_2 = calculate_AUC_base(n01_p = c(15, 15), n01_test = c(300, 300), seed = 1, 
-    model = c("svm", "randomforest"), n_train_sets = c(c(15, 15), c(30, 30), c(60, 
-        60), c(120, 120), c(150, 150)))
+    model = c("svm", "randomforest"), n_train_sets = c(c(15, 15), c(30, 30), 
+        c(60, 60), c(120, 120), c(150, 150)))
 res = {
 }
 res[[1]] = AUC_1
 res[[2]] = AUC_2
-calculate_std_of_AUC_and_draw_plot(res, n_train_sets = c(c(15, 15), c(30, 30), c(60, 
-    60), c(120, 120), c(150, 150)), model = c("svm", "randomforest"))
+calculate_std_of_AUC_and_draw_plot(res, n_train_sets = c(c(15, 15), c(30, 30), 
+    c(60, 60), c(120, 120), c(150, 150)), model = c("svm", "randomforest"), 
+    true_data_to_compare = 1)
 }

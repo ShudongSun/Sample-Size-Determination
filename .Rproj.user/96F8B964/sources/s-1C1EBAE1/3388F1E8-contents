@@ -1,14 +1,5 @@
-#' @importFrom randomForest randomForest
-#' @importFrom e1071 svm
-#' @importFrom xgboost xgboost
-#' @importFrom glmnet cv.glmnet
-#' @importFrom MASS lda
-#' @importFrom naivebayes naive_bayes
-#' @importFrom ada ada
-#' @importFrom tree tree
-#' @importFrom smotefamily SMOTE
-#' @title smote
-#' @description  Use SMOTE to generate data and train different models.
+#' @title Estimation from Pilot Data using PCA_2 and Mvnorm
+#' @description  Use PCA and select the first two PCs to reduce the dimension, then use multivariate normal distribution as the generative model and train different models.
 #' @param x_pilot input variables of pilot data
 #' @param y_pilot labels of pilot data
 #' @param n0_train the number of training data of class 0
@@ -39,12 +30,22 @@
 #' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
 #' return(p_svm) \cr
 #' }\cr \cr
-#' result = pilot_tfe_smote(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}
+#' result = pilot_tfe_mvnorm_pca2(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}
+#'
 #'
 #' @return the scores predicted by models
 #' @export
+#' @importFrom randomForest randomForest
+#' @importFrom e1071 svm
+#' @importFrom xgboost xgboost
+#' @importFrom glmnet cv.glmnet
+#' @importFrom MASS lda
+#' @importFrom naivebayes naive_bayes
+#' @importFrom ada ada
+#' @importFrom tree tree
 #'
 #' @examples
+#'
 #' library(mvtnorm)
 #' library(MASS)
 #'
@@ -77,15 +78,13 @@
 #'n1_train <- n0_train <- n_train <-60
 #'n0_test <- n1_test <- 300
 #'
-#'result = pilot_tfe_smote(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"))
+#'result = pilot_tfe_mvnorm_pca2(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"))
 #'
-pilot_tfe_smote <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"),func=NULL)
+#'
+#'
+pilot_tfe_mvnorm_pca2 <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"),func=NULL)
 {
   library(MASS)
-  library(rlist)
-  # library(smotefamily)
-
-  # library(DMwR)
 
   id0_p = which(y_pilot==0)
   id1_p = which(y_pilot==1)
@@ -93,74 +92,60 @@ pilot_tfe_smote <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,me
   n0_p = length(id0_p)
   n1_p = length(id1_p)
 
-  n0_tt = n0_train + n0_test
-  n1_tt = n1_train + n1_test
 
-  x_pilot_df = data.frame(x_pilot)
-  y_pilot_df = data.frame(y_pilot)
-  pilot_df = cbind(x_pilot_df,y_pilot_df)
-  # pilot_df$y_pilot = as.factor(pilot_df$y_pilot)
-  # table(pilot_df$y_pilot)
+  ### pca
+  x_pilot.pca = prcomp(x_pilot,center = FALSE,scale. = FALSE)
+  x0_pc1 = x_pilot.pca$x[id0_p,1]
+  x1_pc1 = x_pilot.pca$x[id1_p,1]
 
-  n_min_p = min(n0_p,n1_p)
-  # n_min_tt = min(n0_tt,n1_tt)
-  n_max_tt = max(n0_tt,n1_tt)
+  x0_pc2 = x_pilot.pca$x[id0_p,2]
+  x1_pc2 = x_pilot.pca$x[id1_p,2]
 
-  # a = ceiling(n_min_tt/n_min_p-1)*100
-  # b = ceiling(1e4*n_max_tt/a/n_min_p)
-  label_col_num = grep("y_pilot",colnames(pilot_df))
+  pc_p1=x_pilot.pca$rotation[,1]
+  pc_p2=x_pilot.pca$rotation[,2]
 
-  tempData1 <- SMOTE(pilot_df[,-label_col_num], pilot_df[,label_col_num], K=5, dup_size = ceiling(n_max_tt/n_min_p))
-  tempData2 <- SMOTE(tempData1[["data"]][,-label_col_num], tempData1[["data"]][,label_col_num], K=5, dup_size = ceiling(n_max_tt/n_min_p))
-  # newData <- SMOTE(y_pilot ~ ., pilot_df, perc.over = a, perc.under=b)
-  newData = tempData2[["data"]]
+  ### estimate the paramters: mean, variance
+  mu0_hat1 = mean(x0_pc1)
+  mu1_hat1 = mean(x1_pc1)
 
-  table(newData$class)
+  mu0_hat2 = mean(x0_pc2)
+  mu1_hat2 = mean(x1_pc2)
 
-  id0 <- which(newData["class"]==0)
-  id1 <- which(newData["class"]==1)
+  mu0_hat = c(mu0_hat1,mu0_hat2)
+  mu1_hat = c(mu1_hat1,mu1_hat2)
 
-  ###train
-  id0_train <- sample(id0,n0_train)
-  id1_train <- sample(id1,n1_train)
-  id_train <- c(id0_train,id1_train)
+  x0_pc = cbind(x0_pc1,x0_pc2)
+  cov0 = cov(x0_pc)
+  x1_pc = cbind(x1_pc1,x1_pc2)
+  cov1 = cov(x1_pc)
 
-  x_train <- as.matrix(newData[,-grep("class",colnames(newData))][id_train,])
-  y_train <- as.matrix(newData[,"class"][id_train])
-
-  train_x=as.data.frame(x_train)
-  train_y=y_train
-  data_trainxy<-data.frame(train_x,y_train)
-
-  ###test
-  id0_remain = setdiff(id0,id0_train)
-  id1_remain = setdiff(id1,id1_train)
-
-  id0_test <- sample(id0_remain,n0_test)
-  id1_test <- sample(id1_remain,n1_test)
-  id_test <- c(id0_test,id1_test)
-
-  x_test <- as.matrix(newData[,-grep("class",colnames(newData))][id_test,])
-  y_test <- as.matrix(newData[,"class"][id_test])
-
-  test_x=as.data.frame(x_test)
-  # test_y=as.data.frame(y_test)
+  sigma_hat = ((n0_p-1)*cov0+(n1_p-1)*cov1)/(n0_p+n1_p-2)
 
 
+  ### generate the samples based on the estimated distributions
+  n_train=n0_train+n1_train
+  n_test=n0_test+n1_test
 
-  # ###train
-  # train_x0=rMvdc(n0_train, mymvd0)
-  # train_x1=rMvdc(n1_train, mymvd1)
-  # trx=matrix(rbind(train_x0,train_x1),n_train,num_feature)
-  # train_x=as.data.frame(trx)
-  #
-  # ###test
-  # test_x0=rMvdc(n0_test, mymvd0)
-  # test_x1=rMvdc(n1_test, mymvd1)
-  # tex=matrix(rbind(test_x0,test_x1),n_test,num_feature)
-  # test_x=as.data.frame(tex)
-  #
-  # data_trainxy<-data.frame(train_x,train_y)
+
+  ### y
+  train_y=c(rep(0,n0_train),rep(1,n1_train))
+  y0index=which(train_y==0)
+  y1index=which(train_y==1)
+
+
+  ### train
+  train_x0=t(mvrnorm(n0_train, mu0_hat, sigma_hat))
+  train_x1=t(mvrnorm(n1_train, mu1_hat, sigma_hat))
+  trx=matrix(t(cbind(train_x0,train_x1)),n_train,2)
+  train_x=as.data.frame(trx)
+
+  ### test
+  test_x0=t(mvrnorm(n0_test, mu0_hat, sigma_hat))
+  test_x1=t(mvrnorm(n1_test, mu1_hat, sigma_hat))
+  tex=matrix(t(cbind(test_x0,test_x1)),n_test,2)
+  test_x=as.data.frame(tex)
+
+  data_trainxy<-data.frame(train_x,train_y)
 
   methods_all = c("logistic", "penlog", "svm", "randomforest", "lda", "slda", "nb", "nnb", "ada", "tree","xgboost","self")
 

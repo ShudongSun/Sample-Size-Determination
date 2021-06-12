@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1623471907265.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A255CBA0",
+    "lastKnownWriteTime" : 1616953457,
+    "last_content_update" : 1616953457,
+    "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/generate_data.R",
+    "project_path" : "R/generate_data.R",
+    "properties" : {
+        "cursorPosition" : "57,45",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

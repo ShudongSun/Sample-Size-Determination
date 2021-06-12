@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1087459467",
+    "hash" : "0",
     "id" : "4B789638",
-    "lastKnownWriteTime" : 1617042853,
-    "last_content_update" : 1617042853747,
+    "lastKnownWriteTime" : 1623111610,
+    "last_content_update" : 1623111610212,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/calculate_std_of_AUC_and_draw_plot.R",
     "project_path" : "R/calculate_std_of_AUC_and_draw_plot.R",
     "properties" : {
-        "cursorPosition" : "255,2",
-        "scrollLine" : "241"
+        "cursorPosition" : "338,0",
+        "scrollLine" : "0"
     },
     "relative_order" : 1,
     "source_on_save" : false,
