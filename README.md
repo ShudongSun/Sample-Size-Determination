@@ -20,6 +20,7 @@ You can install `SSD` from GitHub with:
 # install.packages("ada")
 # install.packages("tree")
 # install.packages("smotefamily")
+# install.packages("ggplot2")
 
 # install.packages("devtools")
 devtools::install_github("ShudongSun/Sample-Size-Determination")
