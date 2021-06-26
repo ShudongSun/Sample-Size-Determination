@@ -72,13 +72,16 @@
 #'calculate_AUCs(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, method="pca2_mvnorm", model=c("svm","randomforest"), data_input=data)\cr
 #' }
 #'
+#' @param true_data_to_compare 0/1 variable, whether to have the true data to compare with generated data (which could make the output matrix double): if input_data==NULL(run the simulations), we will generate the true data automatically and calculate the AUCs; if you give us the input_data, please make sure that you give us sufficient input data.
+#'
+#'
 #' @return Return the AUCs you want to calculate
 #' @export
 #'
 #' @examples
-#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))))
+#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),true_data_to_compare=1)
 #'
-calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"),func=NULL ,package_imported=NULL , data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),data_input=NULL)
+calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"),func=NULL ,package_imported=NULL , data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),data_input=NULL,true_data_to_compare=1)
 {
   library(parallel)
 
@@ -86,7 +89,7 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
   data_generation = data_generation
 
   fun <- function(x){
-    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model,func=func, data_generation=data_generation, data_input=data_input ))
+    return(calculate_AUC_base(n01_all=n01_all, n01_p=n01_p, n_train_sets=n_train_sets, n01_test=n01_test, seed=x, method=method, model=model,func=func, data_generation=data_generation, data_input=data_input, true_data_to_compare=true_data_to_compare))
   }
 
   if(is.null(ncores)){
@@ -133,9 +136,10 @@ calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c
   save(res,file=file)
 
   # load("./auc_res.Rdata")
+  print("Successfully produce AUCs!")
 
   if(calculate_std_of_AUC_and_produce_plot==TRUE){
-    calculate_std_of_AUC_and_draw_plot(res,n_train_sets=n_train_sets, model=model)
+    calculate_std_of_AUC_and_draw_plot(res,n_train_sets=n_train_sets, model=model, true_data_to_compare=true_data_to_compare)
   }
 
   return(res)

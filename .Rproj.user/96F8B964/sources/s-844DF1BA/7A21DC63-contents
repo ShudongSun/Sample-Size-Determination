@@ -6,8 +6,9 @@
 #' @importFrom naivebayes naive_bayes
 #' @importFrom ada ada
 #' @importFrom tree tree
-#' @title Estimation from Gaussian Copula
-#' @description  Use Gaussian Copula as the generative model and train different models.
+#' @importFrom smotefamily SMOTE
+#' @title smote
+#' @description  Use SMOTE to generate data and train different models.
 #' @param x_pilot input variables of pilot data
 #' @param y_pilot labels of pilot data
 #' @param n0_train the number of training data of class 0
@@ -38,7 +39,7 @@
 #' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
 #' return(p_svm) \cr
 #' }\cr \cr
-#' result = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}
+#' result = pilot_tfe_smote(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}
 #'
 #' @return the scores predicted by models
 #' @export
@@ -76,51 +77,90 @@
 #'n1_train <- n0_train <- n_train <-60
 #'n0_test <- n1_test <- 300
 #'
-#'result = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"))
+#'result = pilot_tfe_smote(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"))
 #'
-pilot_tfe_scDesign2 <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"),func=NULL)
+pilot_tfe_smote <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"),func=NULL)
 {
-  library(scDesign2)
   library(MASS)
   library(rlist)
+  # library(smotefamily)
+
+  # library(DMwR)
 
   id0_p = which(y_pilot==0)
   id1_p = which(y_pilot==1)
+
   n0_p = length(id0_p)
   n1_p = length(id1_p)
-  num_feature = length(x_pilot[id0_p[1],])
 
-  x0_pilot = x_pilot[id0_p,]
-  x1_pilot = x_pilot[id1_p,]
+  n0_tt = n0_train + n0_test
+  n1_tt = n1_train + n1_test
 
-  rownames(x0_pilot) = c(rep("0",n0_p))
-  rownames(x1_pilot) = c(rep("1",n1_p))
+  x_pilot_df = data.frame(x_pilot)
+  y_pilot_df = data.frame(y_pilot)
+  pilot_df = cbind(x_pilot_df,y_pilot_df)
+  # pilot_df$y_pilot = as.factor(pilot_df$y_pilot)
+  # table(pilot_df$y_pilot)
 
+  n_min_p = min(n0_p,n1_p)
+  # n_min_tt = min(n0_tt,n1_tt)
+  n_max_tt = max(n0_tt,n1_tt)
 
-  ###generate the samples based on the estimated distributions
-  n_train=n0_train+n1_train
-  n_test=n0_test+n1_test
+  # a = ceiling(n_min_tt/n_min_p-1)*100
+  # b = ceiling(1e4*n_max_tt/a/n_min_p)
+  label_col_num = grep("y_pilot",colnames(pilot_df))
 
+  tempData1 <- SMOTE(pilot_df[,-label_col_num], pilot_df[,label_col_num], K=5, dup_size = ceiling(n_max_tt/n_min_p))
+  tempData2 <- SMOTE(tempData1[["data"]][,-label_col_num], tempData1[["data"]][,label_col_num], K=5, dup_size = ceiling(n_max_tt/n_min_p))
+  # newData <- SMOTE(y_pilot ~ ., pilot_df, perc.over = a, perc.under=b)
+  newData = tempData2[["data"]]
 
-  ###y
-  train_y=c(rep(0,n0_train),rep(1,n1_train))
+  table(newData$class)
+
+  id0 <- which(newData["class"]==0)
+  id1 <- which(newData["class"]==1)
 
   ###train
-  copula_model_0 <- fit_model_scDesign2(t(x0_pilot), '0', sim_method = 'copula')
-  copula_model_1 <- fit_model_scDesign2(t(x1_pilot), '1', sim_method = 'copula')
+  id0_train <- sample(id0,n0_train)
+  id1_train <- sample(id1,n1_train)
+  id_train <- c(id0_train,id1_train)
 
-  train_x0 <- simulate_count_scDesign2(copula_model_0, n0_train, sim_method = 'copula')
-  train_x1 <- simulate_count_scDesign2(copula_model_1, n1_train, sim_method = 'copula')
-  trx=matrix(rbind(t(train_x0),t(train_x1)),n_train,num_feature)
-  train_x=as.data.frame(trx)
+  x_train <- as.matrix(newData[,-grep("class",colnames(newData))][id_train,])
+  y_train <- as.matrix(newData[,"class"][id_train])
+
+  train_x=as.data.frame(x_train)
+  train_y=y_train
+  data_trainxy<-data.frame(train_x,y_train)
 
   ###test
-  test_x0 <- simulate_count_scDesign2(copula_model_0, n0_test, sim_method = 'copula')
-  test_x1 <- simulate_count_scDesign2(copula_model_1, n1_test, sim_method = 'copula')
-  tex=matrix(rbind(t(test_x0),t(test_x1)),n_test,num_feature)
-  test_x=as.data.frame(tex)
+  id0_remain = setdiff(id0,id0_train)
+  id1_remain = setdiff(id1,id1_train)
 
-  data_trainxy<-data.frame(train_x,train_y)
+  id0_test <- sample(id0_remain,n0_test)
+  id1_test <- sample(id1_remain,n1_test)
+  id_test <- c(id0_test,id1_test)
+
+  x_test <- as.matrix(newData[,-grep("class",colnames(newData))][id_test,])
+  y_test <- as.matrix(newData[,"class"][id_test])
+
+  test_x=as.data.frame(x_test)
+  # test_y=as.data.frame(y_test)
+
+
+
+  # ###train
+  # train_x0=rMvdc(n0_train, mymvd0)
+  # train_x1=rMvdc(n1_train, mymvd1)
+  # trx=matrix(rbind(train_x0,train_x1),n_train,num_feature)
+  # train_x=as.data.frame(trx)
+  #
+  # ###test
+  # test_x0=rMvdc(n0_test, mymvd0)
+  # test_x1=rMvdc(n1_test, mymvd1)
+  # tex=matrix(rbind(test_x0,test_x1),n_test,num_feature)
+  # test_x=as.data.frame(tex)
+  #
+  # data_trainxy<-data.frame(train_x,train_y)
 
   methods_all = c("logistic", "penlog", "svm", "randomforest", "lda", "slda", "nb", "nnb", "ada", "tree","xgboost","self")
 

@@ -124,6 +124,7 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
           if(method == "pca2_mvnorm"){result = pilot_tfe_mvnorm_pca2(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
           if(method == "gaussian_copula"){result = pilot_tfe_gaussian_copula(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
           if(method == "smote"){result = pilot_tfe_smote(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
+          if(method == "scDesign2"){result = pilot_tfe_scDesign2(pilot_rest_data$x_train,pilot_rest_data$y_train,n0_train,n1_train,n0_test,n1_test,method=model,func=func)}
 
         }else if(test_from_true==1){
 
@@ -132,6 +133,8 @@ calculate_AUC_base <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets
           if(method == "pca2_mvnorm"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
           if(method == "gaussian_copula"){result = pilot_train(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
           if(method == "smote"){result = pilot_train(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
+          if(method == "scDesign2"){result = pilot_train_pca2(train_test_data$x_train,train_test_data$y_train,train_test_data$x_test, method=model,func=func)}
+
         }
 
         for(j in 1:num_of_model){
