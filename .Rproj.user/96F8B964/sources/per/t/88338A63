@@ -5,7 +5,7 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "2021791275",
     "id" : "88338A63",
     "lastKnownWriteTime" : 1623108476,
     "last_content_update" : 1623108476,
@@ -13,7 +13,7 @@
     "project_path" : "R/calculate_AUCs.R",
     "properties" : {
         "cursorPosition" : "83,10",
-        "scrollLine" : "77",
+        "scrollLine" : "0",
         "tempName" : "Untitled1"
     },
     "relative_order" : 8,

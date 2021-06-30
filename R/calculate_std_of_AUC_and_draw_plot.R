@@ -229,7 +229,7 @@ calculate_std_of_AUC_and_draw_plot <- function(res, n_train_sets, model, true_da
   y_tfe = t(auc_median)[2,]
   if(true_data_to_compare==1){
     y_true = t(auc_median)[4,]
-    srss = mean(y_true-y_tfe)^2
+    srss = mean((y_true-y_tfe)^2)
   }
 
   # rss_tfe = 0

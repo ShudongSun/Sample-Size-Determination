@@ -33,5 +33,5 @@ true_data_to_compare=1
 
 ###
 # Sys.time()
-# calculate_AUCs(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, method="scDesign2", model=c("svm","randomforest"), data_input=data)
+# result = calculate_AUCs(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, method="scDesign2", model=c("svm","randomforest"), data_input=data)
 # Sys.time()

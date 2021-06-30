@@ -5,7 +5,7 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "2667653508",
     "id" : "9CE20E6E",
     "lastKnownWriteTime" : 1624670660,
     "last_content_update" : 1624670660724,
@@ -13,7 +13,7 @@
     "project_path" : "R/calculate_AUC_base.R",
     "properties" : {
         "cursorPosition" : "135,157",
-        "scrollLine" : "120"
+        "scrollLine" : "0"
     },
     "relative_order" : 2,
     "source_on_save" : false,
