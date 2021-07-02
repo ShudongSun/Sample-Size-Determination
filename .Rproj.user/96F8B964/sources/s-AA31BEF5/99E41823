@@ -1,18 +1,18 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1623472382321.000,
+    "created" : 1625266810912.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "776863648",
-    "id" : "E8712CE9",
+    "hash" : "0",
+    "id" : "99E41823",
     "lastKnownWriteTime" : 1625075757,
-    "last_content_update" : 1625075757846,
+    "last_content_update" : 1625075757,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/scDesign2_test.R",
     "project_path" : "R/scDesign2_test.R",
     "properties" : {
-        "cursorPosition" : "36,10",
+        "cursorPosition" : "31,22",
         "scrollLine" : "15",
         "tempName" : "Untitled1"
     },

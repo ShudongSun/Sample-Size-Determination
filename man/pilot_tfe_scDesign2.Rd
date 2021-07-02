@@ -2,7 +2,7 @@
 % Please edit documentation in R/pilot_tfe_scDesign2.R
 \name{pilot_tfe_scDesign2}
 \alias{pilot_tfe_scDesign2}
-\title{Estimation from Gaussian Copula}
+\title{Estimation from scDesign2}
 \usage{
 pilot_tfe_scDesign2(
   x_pilot,
@@ -11,8 +11,8 @@ pilot_tfe_scDesign2(
   n1_train,
   n0_test,
   n1_test,
-  method = c("svm", "randomforest"),
-  func = NULL
+  copula_model_0 = NULL,
+  copula_model_1 = NULL
 )
 }
 \arguments{
@@ -27,74 +27,35 @@ pilot_tfe_scDesign2(
 \item{n0_test}{the number of test data of class 0}
 
 \item{n1_test}{the number of test data of class 1}
-
-\item{method}{base classification method.
-\itemize{
-\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
-\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
-\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
-\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
-\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
-\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
-\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
-\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
-\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
-\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
-\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
-\item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
-}}
-
-\item{func}{If you set "method" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
-\code{library(e1071)\cr\cr
-predict_model <- function(x_train, y_train, x_test){ \cr
-data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
-fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
-pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
-p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
-return(p_svm) \cr
-}\cr \cr
-result = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}}
 }
 \value{
-the scores predicted by models
+the generated data list including train_x, train_y and test_x
 }
 \description{
-Use Gaussian Copula as the generative model and train different models.
+Use scDesign2 as the generative model and generate data.
 }
 \examples{
-library(mvtnorm)
-library(MASS)
+data_mat <- readRDS(system.file("extdata", "mouse_sie_10x.rds", package = "scDesign2"))
+nonspikes <- which(!grepl("ercc", rownames(data_mat), ignore.case = TRUE))
+data_mat <- data_mat[nonspikes, , drop = FALSE]
+dim(data_mat)
+table(colnames(data_mat))
+needed_cell_type <- c("Enterocyte.Progenitor.Early", "Stem")
 
-df = 10
-rho = 0.5
-d = 5
-delta = rep(2, d)
-H <- abs(outer(1:d, 1:d, "-"))
-covxx = rho^H
+set.seed(1)
+all_idx <- unlist(sapply(needed_cell_type, function(x) {
+    cell_type_idx <- which(colnames(data_mat) == x)
+    n_cell_total <- length(cell_type_idx)
+    sample(cell_type_idx, 800)
+}))
+allcount <- data_mat[, all_idx]
+x_data = t(allcount)
+y_data = c(rep(0, 800), rep(1, 800))
+data = list(x_data = x_data, y_data = y_data)
 
-n1_all <- n0_all <- 800
-n1_p <- n0_p <- 15
+pilot_rest_data = split_data(data$x_data, data$y_data, n_train = 15, seed = 1)
 
-x0_all = rmvt(n = n0_all, sigma = covxx, delta = rep(0, d), df = df)
-x1_all = rmvt(n = n1_all, sigma = covxx, delta = delta, df = df)
-
-x_data = rbind(x0_all, x1_all)
-y_data = c(rep(0, n0_all), rep(1, n1_all))
-
-id0 <- which(y_data == 0)
-id1 <- which(y_data == 1)
-
-id0_p <- sample(id0, n0_p)
-id1_p <- sample(id1, n1_p)
-id_p <- c(id0_p, id1_p)
-
-x_pilot <- as.matrix(x_data[id_p, ])
-y_pilot <- as.matrix(y_data[id_p])
-
-n1_train <- n0_train <- n_train <- 60
-n0_test <- n1_test <- 300
-
-result = pilot_tfe_gaussian_copula(x_pilot, y_pilot, n0_train, n1_train, n0_test, 
-    n1_test, method = c("svm", "randomforest"))
+data_list = pilot_tfe_scDesign2(pilot_rest_data$x_train, pilot_rest_data$y_train, 
+    n0_train = 60, n1_train = 60, n0_test = 300, n1_test = 300)
 
 }

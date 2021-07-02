@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1612329201539.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3762636382",
+    "id" : "3197039E",
+    "lastKnownWriteTime" : 1612573869,
+    "last_content_update" : 1612573869095,
+    "path" : "C:/SDCard/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_tfe_smote.R",
+    "project_path" : "R/pilot_tfe_smote.R",
+    "properties" : {
+        "cursorPosition" : "82,1",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

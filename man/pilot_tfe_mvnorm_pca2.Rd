@@ -2,18 +2,9 @@
 % Please edit documentation in R/pilot_tfe_mvnorm_pca2.R
 \name{pilot_tfe_mvnorm_pca2}
 \alias{pilot_tfe_mvnorm_pca2}
-\title{Estimation from Pilot Data using PCA_2 and Mvnorm}
+\title{Get estimation from Pilot Data using PCA_2 and Mvnorm}
 \usage{
-pilot_tfe_mvnorm_pca2(
-  x_pilot,
-  y_pilot,
-  n0_train,
-  n1_train,
-  n0_test,
-  n1_test,
-  method = c("svm", "randomforest"),
-  func = NULL
-)
+pilot_tfe_mvnorm_pca2(x_pilot, y_pilot, n0_train, n1_train, n0_test, n1_test)
 }
 \arguments{
 \item{x_pilot}{input variables of pilot data}
@@ -27,39 +18,12 @@ pilot_tfe_mvnorm_pca2(
 \item{n0_test}{the number of test data of class 0}
 
 \item{n1_test}{the number of test data of class 1}
-
-\item{method}{base classification method.
-\itemize{
-\item logistic: Logistic regression. \link{glm} function with family = 'binomial'
-\item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
-\item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
-\item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
-\item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
-\item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
-\item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
-\item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
-\item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
-\item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
-\item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
-\item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
-}}
-
-\item{func}{If you set "method" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
-\code{library(e1071)\cr\cr
-predict_model <- function(x_train, y_train, x_test){ \cr
-data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
-fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
-pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
-p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
-return(p_svm) \cr
-}\cr \cr
-result = pilot_tfe_mvnorm_pca2(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}}
 }
 \value{
-the scores predicted by models
+the generated data list including train_x, train_y and test_x
 }
 \description{
-Use PCA and select the first two PCs to reduce the dimension, then use multivariate normal distribution as the generative model and train different models.
+Use PCA and select the first two PCs to reduce the dimension, then use multivariate normal distribution as the generative model and generate data.
 }
 \examples{
 
@@ -95,8 +59,8 @@ y_pilot <- as.matrix(y_data[id_p])
 n1_train <- n0_train <- n_train <- 60
 n0_test <- n1_test <- 300
 
-result = pilot_tfe_mvnorm_pca2(x_pilot, y_pilot, n0_train, n1_train, n0_test, n1_test, 
-    method = c("svm", "randomforest"))
+data_list = pilot_tfe_mvnorm_pca2(x_pilot, y_pilot, n0_train, n1_train, n0_test, 
+    n1_test)
 
 
 

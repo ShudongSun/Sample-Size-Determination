@@ -1,46 +1,13 @@
-#' @importFrom randomForest randomForest
-#' @importFrom e1071 svm
-#' @importFrom xgboost xgboost
-#' @importFrom glmnet cv.glmnet
-#' @importFrom MASS lda
-#' @importFrom naivebayes naive_bayes
-#' @importFrom ada ada
-#' @importFrom tree tree
-#' @title Estimation from Gaussian Copula
-#' @description  Use Gaussian Copula as the generative model and train different models.
+#' @title Get estimation from Gaussian Copula
+#' @description  Use Gaussian Copula as the generative model and generate data.
 #' @param x_pilot input variables of pilot data
 #' @param y_pilot labels of pilot data
 #' @param n0_train the number of training data of class 0
 #' @param n1_train the number of training data of class 1
 #' @param n0_test the number of test data of class 0
 #' @param n1_test the number of test data of class 1
-#' @param method base classification method.
-#' \itemize{
-#' \item logistic: Logistic regression. \link{glm} function with family = 'binomial'
-#' \item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
-#' \item svm: Support Vector Machines. \code{\link[e1071]{svm}} in \code{e1071} package
-#' \item randomforest: Random Forest. \code{\link[randomForest]{randomForest}} in \code{randomForest} package
-#' \item lda: Linear Discriminant Analysis. \code{\link[MASS]{lda}} in \code{MASS} package
-#' \item slda: Sparse Linear Discriminant Analysis with LASSO penalty.
-#' \item nb: Naive Bayes. \code{\link[e1071]{naiveBayes}} in \code{e1071} package
-#' \item nnb: Nonparametric Naive Bayes. \code{\link[naivebayes]{naive_bayes}} in \code{naivebayes} package
-#' \item ada: Ada-Boost. \code{\link[ada]{ada}} in \code{ada} package
-#' \item xgboost: XGBboost. \code{\link[xgboost]{xgboost}} in \code{xgboost} package
-#' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
-#' \item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
-#' }
-#' @param func If you set "method" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
-#' \code{library(e1071)\cr\cr
-#' predict_model <- function(x_train, y_train, x_test){ \cr
-#' data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
-#' fit_svm<-svm(y_train~.,data=data_trainxy,probability=TRUE) \cr
-#' pred_svm <- predict(fit_svm, x_test, probability=TRUE,decision.values = TRUE) \cr
-#' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
-#' return(p_svm) \cr
-#' }\cr \cr
-#' result = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("self","randomforest"),func=predict_model)}
 #'
-#' @return the scores predicted by models
+#' @return the generated data list including train_x, train_y and test_x
 #' @export
 #'
 #' @examples
@@ -76,9 +43,9 @@
 #'n1_train <- n0_train <- n_train <-60
 #'n0_test <- n1_test <- 300
 #'
-#'result = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"))
+#' data_list = pilot_tfe_gaussian_copula(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test)
 #'
-pilot_tfe_gaussian_copula <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test,method=c("svm","randomforest"),func=NULL)
+pilot_tfe_gaussian_copula <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test)
 {
   library(copula)
   library(MASS)
@@ -137,123 +104,8 @@ pilot_tfe_gaussian_copula <- function(x_pilot,y_pilot,n0_train,n1_train,n0_test,
   tex=matrix(rbind(test_x0,test_x1),n_test,num_feature)
   test_x=as.data.frame(tex)
 
-  data_trainxy<-data.frame(train_x,train_y)
+  data_list<-list(train_x=train_x,train_y=train_y,test_x=test_x)
 
-  methods_all = c("logistic", "penlog", "svm", "randomforest", "lda", "slda", "nb", "nnb", "ada", "tree","xgboost","self")
-
-  p_results = numeric()
-  # print(method)
-  for (i in 1:length(method)){
-    # print(method[i])
-    if(!method[i] %in% methods_all){
-      stop('method \'',method[i], '\' cannot be found')
-    }
-
-    ###LR
-    if(method[i] == "logistic"){
-      fit_LR<-suppressWarnings(glm(train_y~.,family = "binomial",data=data_trainxy, maxit=100))
-      prep_LR<-predict(fit_LR,test_x)
-      p_LR<-1/(1+exp(-prep_LR))
-      p_results=rbind(p_results,p_LR)
-    }
-
-    ###xgboost
-    if(method[i] == "xgboost"){
-      new_trainx<-as.matrix(train_x)
-      dx_trainy<-xgb.DMatrix(data = new_trainx, label = train_y)
-      fit_xgb <- xgboost(data=dx_trainy, nthread=3,nrounds=100,objective = "binary:logistic", verbose = 0)
-      p_xgb<-predict(fit_xgb,as.matrix(test_x))
-      p_results=rbind(p_results,p_xgb)
-    }
-
-    ###SVM
-    if(method[i] == "svm"){
-      data_trainxy<-data.frame(train_x,train_y=as.factor(train_y))
-      fit_svm<-svm(train_y~.,data=data_trainxy,probability=TRUE)
-      pred_svm <- predict(fit_svm, test_x, probability=TRUE,decision.values = TRUE)
-      p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1"
-      p_results=rbind(p_results,p_svm)
-    }
-
-    ###RF
-    if(method[i] == "randomforest"){
-      data_trainxy<-data.frame(train_x,train_y=as.factor(train_y))
-      fit_RF<-randomForest(train_y~.,data = data_trainxy,importance=TRUE)
-      p_RF=predict(fit_RF,test_x,type = "prob")[, 2]
-      p_results=rbind(p_results,p_RF)
-    }
-
-    ###Penalized logistic regression with LASSO penalty
-    if(method[i] == "penlog"){
-      fit_penlog = cv.glmnet(as.matrix(train_x), train_y, family = "binomial")
-      p_penlog = t(predict(fit_penlog$glmnet.fit, newx = as.matrix(test_x), type = "response", s = fit_penlog$lambda.min))
-      rownames(p_penlog)="p_penlog"
-      p_results=rbind(p_results,p_penlog)
-    }
-
-    ###Linear Discriminant Analysis
-    if(method[i] == "lda"){
-      fit_lda = lda(as.matrix(train_x), train_y)
-      p_lda = predict(fit_lda, as.matrix(test_x))$posterior[, 2]
-      p_results=rbind(p_results,p_lda)
-    }
-
-    ###Sparse Linear Discriminant Analysis with LASSO penalty
-    if(method[i] == "slda"){
-      n1 = sum(train_y==1)
-      n0 = sum(train_y==0)
-      n = n1 + n0
-      y_lda = train_y
-      y_lda[train_y == 0] = -n/n0
-      y_lda[train_y == 1] = n/n1
-      fit_slda = cv.glmnet(as.matrix(train_x), y_lda)
-      score_slda = t(predict(fit_slda$glmnet.fit, newx = as.matrix(test_x), type = "link", s = fit_slda$lambda.min))
-      p_slda = 1/(1+exp(-score_slda))
-      rownames(p_slda)="p_slda"
-      p_results=rbind(p_results,p_slda)
-    }
-
-    ###Naive Bayes
-    if(method[i] == "nb"){
-      train_data_nb = data.frame(train_x, y = train_y)
-      fit_nb <- naive_bayes(as.factor(y) ~ ., data = train_data_nb, usekernel = FALSE)
-      p_nb = predict(fit_nb, data.frame(test_x), type = "prob")[,2]
-      p_results=rbind(p_results,p_nb)
-    }
-
-    ###Nonparametric Naive Bayes
-    if(method[i] == "nnb"){
-      train_data_nnb = data.frame(train_x, y = train_y)
-      fit_nnb <- naive_bayes(as.factor(y) ~ ., data = train_data_nnb, usekernel = TRUE)
-      p_nnb = predict(fit_nnb, data.frame(test_x), type = "prob")[,2]
-      p_results=rbind(p_results,p_nnb)
-    }
-
-    ###Ada-Boost
-    if(method[i] == "ada"){
-      train_data_ada = data.frame(train_x, y = train_y)
-      fit_ada = ada(y ~ ., data = train_data_ada)
-      p_ada = predict(fit_ada, data.frame(test_x), type = "probs")[, 2]
-      p_results=rbind(p_results,p_ada)
-    }
-
-    ###Classification
-    if(method[i] == "tree"){
-      # train_y = as.factor(train_y)
-      train_data_tree = data.frame(train_x, y = train_y)
-      fit_tree = tree(y~ ., data = train_data_tree)
-      p_tree = predict(fit_tree, newdata = data.frame(test_x), type = 'vector')
-      p_results=rbind(p_results,p_tree)
-    }
-
-    ###Self-defined
-    if(method[i] == "self"){
-      p_self = func(train_x, train_y, test_x)
-      p_results=rbind(p_results,p_self)
-    }
-
-  }
-
-  return(p_results)
+  return(data_list)
 
 }

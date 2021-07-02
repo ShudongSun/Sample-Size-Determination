@@ -1,21 +1,21 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1624660559158.000,
+    "created" : 1625266044025.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "95574874",
-    "id" : "71EB97C8",
-    "lastKnownWriteTime" : 1624668169,
-    "last_content_update" : 1624668169573,
+    "hash" : "3935214039",
+    "id" : "1C48A402",
+    "lastKnownWriteTime" : 1625266706,
+    "last_content_update" : 1625266706275,
     "path" : "D:/Dropbox/USC/RA/2020summer/R Package/Sample-Size-Determination/R/pilot_tfe_scDesign2.R",
     "project_path" : "R/pilot_tfe_scDesign2.R",
     "properties" : {
-        "cursorPosition" : "109,55",
-        "scrollLine" : "0"
+        "cursorPosition" : "45,2",
+        "scrollLine" : "33"
     },
-    "relative_order" : 8,
+    "relative_order" : 4,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

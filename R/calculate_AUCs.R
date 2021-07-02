@@ -69,7 +69,7 @@
 #'table(y_data)\cr
 #'data = list(x_data=x_data, y_data=y_data)\cr\cr
 #'
-#'calculate_AUCs(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, method="pca2_mvnorm", model=c("svm","randomforest"), data_input=data)\cr
+#'res = calculate_AUCs(n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, method="pca2_mvnorm", model=c("svm","randomforest"), data_input=data)\cr
 #' }
 #'
 #' @param true_data_to_compare 0/1 variable, whether to have the true data to compare with generated data (which could make the output matrix double): if input_data==NULL(run the simulations), we will generate the true data automatically and calculate the AUCs; if you give us the input_data, please make sure that you give us sufficient input data.
@@ -79,7 +79,7 @@
 #' @export
 #'
 #' @examples
-#' calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),true_data_to_compare=1)
+#' res = calculate_AUCs(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=FALSE, calculate_std_of_AUC_and_produce_plot=TRUE, data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),true_data_to_compare=1)
 #'
 calculate_AUCs <- function(n01_all= c(800,800), n01_p=c(15,15), n_train_sets = c(c(15,15),c(30,30),c(60,60),c(120,120),c(150,150)), n01_test=c(300,300), num_of_seeds=20, random_seeds=TRUE, seeds=NULL, calculate_std_of_AUC_and_produce_plot=FALSE, method="pca2_mvnorm", ncores = NULL, model=c("svm","randomforest"),func=NULL ,package_imported=NULL , data_generation=list(dist="t-distribution",sigma=list(class_0=diag(5),class_1=diag(5)),df=c(10,10),delta=c(rep(0,5),rep(2,5))),data_input=NULL,true_data_to_compare=1)
 {

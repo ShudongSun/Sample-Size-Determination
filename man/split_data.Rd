@@ -4,21 +4,30 @@
 \alias{split_data}
 \title{Split Data}
 \usage{
-split_data(x_data, y_data, n_train = 0.7, n_test = NULL, seed = NULL)
+split_data(
+  x_data,
+  y_data,
+  n0_train,
+  n1_train,
+  n0_test = NULL,
+  n1_test = NULL,
+  seed = NULL
+)
 }
 \arguments{
 \item{x_data}{x data you want to split}
 
 \item{y_data}{y data you want to split: it must be binary data and the class label should be "0" and "1"}
 
-\item{n_train}{If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the train split.
-If int, represents the absolute number of train samples (It will extract half from class 0 and half from class 1).
-If None, the value is automatically set to the complement of the test size.
-Its default value is set to 0.7}
+\item{n0_train}{Int, represents the absolute number of class 0 training data.}
 
-\item{n_test}{If float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the train split.
-If int, represents the absolute number of train samples (It will extract half from class 0 and half from class 1).
-If NULL, the value is automatically set to the complement of the training size.}
+\item{n1_train}{Int, represents the absolute number of class 1 training data.}
+
+\item{n0_test}{Int, represents the absolute number of class 0 test data.
+If NULL, equals to n0_all minus n0_train.}
+
+\item{n1_test}{Int, represents the absolute number of class 1 test data.
+If NULL, equals to n1_all minus n1_train.}
 
 \item{seed}{Controls the shuffling applied to the data before applying the split.
 Pass an int as the seed for reproducible output across multiple function calls.}
@@ -31,9 +40,12 @@ Split Data
 }
 \examples{
 
-data = generate_data()
-data_split1 = split_data(data$x_data, data$y_data, n_train = 30, seed = 1)
-data_split2 = split_data(data$x_data, data$y_data, n_train = 1000, n_test = 500, 
+data = generate_data(n01_all = c(800, 800))
+data_split1 = split_data(data$x_data, data$y_data, n0_train = 500, n1_train = 500, 
     seed = 1)
-data_split3 = split_data(data$x_data, data$y_data, n_train = 0.6, n_test = 0.4, seed = 1)
+data_split2 = split_data(data$x_data, data$y_data, n0_train = 500, n1_train = 500, 
+    n0_test = 200, n1_test = 200, seed = 1)
+data_split3 = split_data(data$x_data, data$y_data, n0_train = 500, n1_train = 500, 
+    n0_test = 200, n1_test = NULL, seed = 1)
+
 }

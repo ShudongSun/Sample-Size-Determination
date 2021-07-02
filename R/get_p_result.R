@@ -1,9 +1,15 @@
-#' @title Training after PCA_2
-#' @description  Use PCA and select the first two PCs to reduce the dimension, then train different models using the first PCs.
-#' @param x_train input variables of training data
-#' @param y_train labels of training data
-#' @param x_test input variables of test data
-#' @param method base classification method.
+#' @importFrom randomForest randomForest
+#' @importFrom e1071 svm
+#' @importFrom xgboost xgboost
+#' @importFrom glmnet cv.glmnet
+#' @importFrom MASS lda
+#' @importFrom naivebayes naive_bayes
+#' @importFrom ada ada
+#' @importFrom tree tree
+#' @title Run and get predicted results
+#' @description  Run statistical model and get AUC results.
+#' @param data_list data list including train_x, train_y and test_x
+#' @param model base classification model.
 #' \itemize{
 #' \item logistic: Logistic regression. \link{glm} function with family = 'binomial'
 #' \item penlog: Penalized logistic regression with LASSO penalty. \code{\link[glmnet]{glmnet}} in \code{glmnet} package
@@ -18,7 +24,7 @@
 #' \item tree: Classificatin Tree. \code{\link[tree]{tree}} in \code{tree} package
 #' \item self: You can use your self-defined function. You need to pass your self-defined function via the "func" parameter.
 #' }
-#' @param func If you set "method" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
+#' @param func If you set "model" to "self", you have to pass your self-defined model function. This function should be able to take "x_train" and "y_train" as the first two inputs to train the model and then take "x_test" as the third input and return the predicted scores of x_test data. For example, \cr\cr
 #' \code{library(e1071)\cr\cr
 #' predict_model <- function(x_train, y_train, x_test){ \cr
 #' data_trainxy<-data.frame(x_train,y_train=as.factor(y_train)) \cr
@@ -27,21 +33,13 @@
 #' p_svm=as.data.frame(attr(pred_svm, "probabilities"))$"1" \cr
 #' return(p_svm) \cr
 #' }\cr \cr
-#' result = pilot_train_pca2(x_train,y_train,x_test,method=c("self","randomforest"),func=predict_model)}
+#' result = get_p_result(data_list=data_list, model=c("self","randomforest"), func=predict_model)}
+#'
 #'
 #' @return the scores predicted by models
 #' @export
-#' @importFrom randomForest randomForest
-#' @importFrom e1071 svm
-#' @importFrom xgboost xgboost
-#' @importFrom glmnet cv.glmnet
-#' @importFrom MASS lda
-#' @importFrom naivebayes naive_bayes
-#' @importFrom ada ada
-#' @importFrom tree tree
 #'
 #' @examples
-#'
 #' library(mvtnorm)
 #' library(MASS)
 #'
@@ -53,72 +51,51 @@
 #' covxx=rho^H
 #'
 #' n1_all <- n0_all <- 800
+#' n1_p <- n0_p <- 15
+#'
+#' x0_all = rmvt(n = n0_all, sigma = covxx, delta = rep(0,d), df = df)
+#' x1_all = rmvt(n = n1_all, sigma = covxx, delta = delta, df = df)
+#'
+#' x_data = rbind(x0_all,x1_all)
+#' y_data = c(rep(0,n0_all),rep(1,n1_all))
+#'
+#' id0 <- which(y_data==0)
+#' id1 <- which(y_data==1)
+#'
+#' id0_p <- sample(id0,n0_p)
+#' id1_p <- sample(id1,n1_p)
+#' id_p <- c(id0_p,id1_p)
+#'
+#' x_pilot <- as.matrix(x_data[id_p,])
+#' y_pilot <- as.matrix(y_data[id_p])
+#'
 #' n1_train <- n0_train <- n_train <-60
 #' n0_test <- n1_test <- 300
 #'
-#'x0_all = rmvt(n = n0_all, sigma = covxx, delta = rep(0,d), df = df)
-#'x1_all = rmvt(n = n1_all, sigma = covxx, delta = delta, df = df)
+#' data_list = pilot_tfe_mvnorm_pca2(x_pilot,y_pilot,n0_train,n1_train,n0_test,n1_test)
 #'
-#'x_data = rbind(x0_all,x1_all)
-#'y_data = c(rep(0,n0_all),rep(1,n1_all))
+#' result = get_p_result(data_list, model=c("svm","randomforest"))
 #'
-#'id0 <- which(y_data==0)
-#'id1 <- which(y_data==1)
-#'
-#'id0_train <- sample(id0,n0_train)
-#'id1_train <- sample(id1,n1_train)
-#'id_train <- c(id0_train,id1_train)
-#'x_train <- as.matrix(x_data[id_train,])
-#'y_train <- as.matrix(y_data[id_train])
-#'
-#'id0_remain = setdiff(id0,id0_train)
-#'id1_remain = setdiff(id1,id1_train)
-#'
-#'id0_test <- sample(id0_remain,n0_test)
-#'id1_test <- sample(id1_remain,n1_test)
-#'id_test <- c(id0_test,id1_test)
-#'x_test <- as.matrix(x_data[id_test,])
-#'
-#'result = pilot_train_pca2(x_train,y_train,x_test,method=c("svm","randomforest"))
-pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest"),func=NULL)
+get_p_result <- function(data_list, model=c("svm","randomforest"), func=NULL)
 {
-  x_train.pca = prcomp(x_train,center = FALSE,scale. = FALSE)
-
-  x_pc1 = x_train.pca$x[,1]
-  x_pc2 = x_train.pca$x[,2]
-
-  pc_p1=x_train.pca$rotation[,1]
-  pc_p2=x_train.pca$rotation[,2]
-
-  x_train_2pc = as.matrix(cbind(x_pc1,x_pc2))
-
-  train_x=as.data.frame(x_train_2pc)
-  names(train_x) <- c("pc1", "pc2")
-  train_y = y_train
-
-  test_x0_pc1 = as.matrix(x_test)%*%pc_p1
-  test_x1_pc2 = as.matrix(x_test)%*%pc_p2
-
-  test_x_pc2 = as.matrix(cbind(test_x0_pc1,test_x1_pc2))
-  test_x=as.data.frame(test_x_pc2)
-  names(test_x) <- c("pc1", "pc2")
-
-
+  train_x = data_list$train_x
+  train_y = data_list$train_y
+  test_x = data_list$test_x
 
   data_trainxy<-data.frame(train_x,train_y)
 
-  methods_all = c("logistic", "penlog", "svm", "randomforest", "lda", "slda", "nb", "nnb", "ada", "tree","xgboost","self")
+  models_all = c("logistic", "penlog", "svm", "randomforest", "lda", "slda", "nb", "nnb", "ada", "tree","xgboost","self")
 
   p_results = numeric()
-  # print(method)
-  for (i in 1:length(method)){
-    # print(method[i])
-    if(!method[i] %in% methods_all){
-      stop('method \'',method[i], '\' cannot be found')
+  # print(model)
+  for (i in 1:length(model)){
+    # print(model[i])
+    if(!model[i] %in% models_all){
+      stop('model \'',model[i], '\' cannot be found')
     }
 
     ###LR
-    if(method[i] == "logistic"){
+    if(model[i] == "logistic"){
       fit_LR<-suppressWarnings(glm(train_y~.,family = "binomial",data=data_trainxy, maxit=100))
       prep_LR<-predict(fit_LR,test_x)
       p_LR<-1/(1+exp(-prep_LR))
@@ -126,16 +103,16 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###xgboost
-    if(method[i] == "xgboost"){
+    if(model[i] == "xgboost"){
       new_trainx<-as.matrix(train_x)
       dx_trainy<-xgb.DMatrix(data = new_trainx, label = train_y)
-      fit_xgb <- xgboost(data=dx_trainy, nthread=3,nrounds=100,objective = "binary:logistic", verbose = 0)
+      fit_xgb <- xgboost(data=dx_trainy, nthread=3,nrounds=100, verbose = 0)
       p_xgb<-predict(fit_xgb,as.matrix(test_x))
       p_results=rbind(p_results,p_xgb)
     }
 
     ###SVM
-    if(method[i] == "svm"){
+    if(model[i] == "svm"){
       data_trainxy<-data.frame(train_x,train_y=as.factor(train_y))
       fit_svm<-svm(train_y~.,data=data_trainxy,probability=TRUE)
       pred_svm <- predict(fit_svm, test_x, probability=TRUE,decision.values = TRUE)
@@ -144,7 +121,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###RF
-    if(method[i] == "randomforest"){
+    if(model[i] == "randomforest"){
       data_trainxy<-data.frame(train_x,train_y=as.factor(train_y))
       fit_RF<-randomForest(train_y~.,data = data_trainxy,importance=TRUE)
       p_RF=predict(fit_RF,test_x,type = "prob")[, 2]
@@ -152,7 +129,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Penalized logistic regression with LASSO penalty
-    if(method[i] == "penlog"){
+    if(model[i] == "penlog"){
       fit_penlog = cv.glmnet(as.matrix(train_x), train_y, family = "binomial")
       p_penlog = t(predict(fit_penlog$glmnet.fit, newx = as.matrix(test_x), type = "response", s = fit_penlog$lambda.min))
       rownames(p_penlog)="p_penlog"
@@ -160,14 +137,14 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Linear Discriminant Analysis
-    if(method[i] == "lda"){
+    if(model[i] == "lda"){
       fit_lda = lda(as.matrix(train_x), train_y)
       p_lda = predict(fit_lda, as.matrix(test_x))$posterior[, 2]
       p_results=rbind(p_results,p_lda)
     }
 
     ###Sparse Linear Discriminant Analysis with LASSO penalty
-    if(method[i] == "slda"){
+    if(model[i] == "slda"){
       n1 = sum(train_y==1)
       n0 = sum(train_y==0)
       n = n1 + n0
@@ -182,7 +159,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Naive Bayes
-    if(method[i] == "nb"){
+    if(model[i] == "nb"){
       train_data_nb = data.frame(train_x, y = train_y)
       fit_nb <- naive_bayes(as.factor(y) ~ ., data = train_data_nb, usekernel = FALSE)
       p_nb = predict(fit_nb, data.frame(test_x), type = "prob")[,2]
@@ -190,7 +167,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Nonparametric Naive Bayes
-    if(method[i] == "nnb"){
+    if(model[i] == "nnb"){
       train_data_nnb = data.frame(train_x, y = train_y)
       fit_nnb <- naive_bayes(as.factor(y) ~ ., data = train_data_nnb, usekernel = TRUE)
       p_nnb = predict(fit_nnb, data.frame(test_x), type = "prob")[,2]
@@ -198,7 +175,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Ada-Boost
-    if(method[i] == "ada"){
+    if(model[i] == "ada"){
       train_data_ada = data.frame(train_x, y = train_y)
       fit_ada = ada(y ~ ., data = train_data_ada)
       p_ada = predict(fit_ada, data.frame(test_x), type = "probs")[, 2]
@@ -206,7 +183,7 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Classification
-    if(method[i] == "tree"){
+    if(model[i] == "tree"){
       # train_y = as.factor(train_y)
       train_data_tree = data.frame(train_x, y = train_y)
       fit_tree = tree(y~ ., data = train_data_tree)
@@ -215,13 +192,11 @@ pilot_train_pca2 <- function(x_train,y_train,x_test,method=c("svm","randomforest
     }
 
     ###Self-defined
-    if(method[i] == "self"){
+    if(model[i] == "self"){
       p_self = func(train_x, train_y, test_x)
       p_results=rbind(p_results,p_self)
     }
-
   }
-
   return(p_results)
 
 }
